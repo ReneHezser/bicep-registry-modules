@@ -1491,7 +1491,7 @@ module managedCluster 'br/public:avm/res/container-service/managed-cluster:<vers
 | [`enableAppMonitoringOpenTelemetryMetrics`](#parameter-enableappmonitoringopentelemetrymetrics) | bool | Indicates if Application Monitoring Open Telemetry Metrics is enabled. |
 | [`enableAzureDefender`](#parameter-enableazuredefender) | bool | Whether to enable Azure Defender. |
 | [`enableAzureMonitorProfileLogs`](#parameter-enableazuremonitorprofilelogs) | bool | Whether the Logs profile for the Azure Monitor Infrastructure and Application Logs is enabled. |
-| [`enableAzureMonitorProfileMetrics`](#parameter-enableazuremonitorprofilemetrics) | bool | Whether the metric state of the kubenetes cluster is enabled. |
+| [`enableAzureMonitorProfileMetrics`](#parameter-enableazuremonitorprofilemetrics) | bool | Whether the metric state of the kubenetes cluster is enabled. Defaults to `true`. |
 | [`enableContainerInsights`](#parameter-enablecontainerinsights) | bool | Indicates if Azure Monitor Container Insights Logs Addon is enabled. |
 | [`enableDnsZoneContributorRoleAssignment`](#parameter-enablednszonecontributorroleassignment) | bool | Specifies whether assing the DNS zone contributor role to the cluster service principal. It will be ignored if `webApplicationRoutingEnabled` is set to `false` or `dnsZoneResourceId` not provided. |
 | [`enableImageCleaner`](#parameter-enableimagecleaner) | bool | Whether to enable Image Cleaner for Kubernetes. |
@@ -1543,7 +1543,7 @@ module managedCluster 'br/public:avm/res/container-service/managed-cluster:<vers
 | [`publicNetworkAccess`](#parameter-publicnetworkaccess) | string | Allow or deny public network access for AKS. |
 | [`roleAssignments`](#parameter-roleassignments) | array | Array of role assignments to create. |
 | [`serviceCidr`](#parameter-servicecidr) | string | A CIDR notation IP range from which to assign service cluster IPs. It must not overlap with any Subnet IP ranges. |
-| [`skuTier`](#parameter-skutier) | string | Tier of a managed cluster SKU. |
+| [`skuTier`](#parameter-skutier) | string | Tier of a managed cluster SKU. Defaults to `Standard`. |
 | [`sshPublicKey`](#parameter-sshpublickey) | string | Specifies the SSH RSA public key string for the Linux nodes. |
 | [`supportPlan`](#parameter-supportplan) | string | The support plan for the Managed Cluster. |
 | [`tags`](#parameter-tags) | object | Tags of the resource. |
@@ -1662,9 +1662,9 @@ Define one or more secondary/additional agent pools.
 
 | Parameter | Type | Description |
 | :-- | :-- | :-- |
-| [`availabilityZones`](#parameter-agentpoolsavailabilityzones) | array | The availability zones of the agent pool. |
+| [`availabilityZones`](#parameter-agentpoolsavailabilityzones) | array | The availability zones of the agent pool. Defaults to ['1', '2']. |
 | [`count`](#parameter-agentpoolscount) | int | The number of agents (VMs) to host docker containers. Allowed values must be in the range of 1 to 100 (inclusive). |
-| [`enableAutoScaling`](#parameter-agentpoolsenableautoscaling) | bool | Whether to enable auto-scaling for the agent pool. |
+| [`enableAutoScaling`](#parameter-agentpoolsenableautoscaling) | bool | Whether to enable auto-scaling for the agent pool. Defaults to `true`. |
 | [`enableDefaultTelemetry`](#parameter-agentpoolsenabledefaulttelemetry) | bool | The enable default telemetry of the agent pool. |
 | [`enableEncryptionAtHost`](#parameter-agentpoolsenableencryptionathost) | bool | Whether to enable encryption at host for the agent pool. |
 | [`enableFIPS`](#parameter-agentpoolsenablefips) | bool | Whether to enable FIPS for the agent pool. |
@@ -1708,7 +1708,7 @@ The name of the agent pool.
 
 ### Parameter: `agentPools.availabilityZones`
 
-The availability zones of the agent pool.
+The availability zones of the agent pool. Defaults to ['1', '2'].
 
 - Required: No
 - Type: array
@@ -1722,7 +1722,7 @@ The number of agents (VMs) to host docker containers. Allowed values must be in 
 
 ### Parameter: `agentPools.enableAutoScaling`
 
-Whether to enable auto-scaling for the agent pool.
+Whether to enable auto-scaling for the agent pool. Defaults to `true`.
 
 - Required: No
 - Type: bool
@@ -2524,11 +2524,11 @@ Whether the Logs profile for the Azure Monitor Infrastructure and Application Lo
 
 ### Parameter: `enableAzureMonitorProfileMetrics`
 
-Whether the metric state of the kubenetes cluster is enabled.
+Whether the metric state of the kubenetes cluster is enabled. Defaults to `true`.
 
 - Required: No
 - Type: bool
-- Default: `False`
+- Default: `True`
 
 ### Parameter: `enableContainerInsights`
 
@@ -3200,7 +3200,7 @@ A CIDR notation IP range from which to assign service cluster IPs. It must not o
 
 ### Parameter: `skuTier`
 
-Tier of a managed cluster SKU.
+Tier of a managed cluster SKU. Defaults to `Standard`.
 
 - Required: No
 - Type: string

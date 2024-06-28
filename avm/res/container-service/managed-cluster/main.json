@@ -5,8 +5,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.26.170.59819",
-      "templateHash": "12963223629809121473"
+      "version": "0.28.1.47646",
+      "templateHash": "3595288157666977512"
     },
     "name": "Azure Kubernetes Service (AKS) Managed Clusters",
     "description": "This module deploys an Azure Kubernetes Service (AKS) Managed Cluster.",
@@ -32,7 +32,7 @@
             },
             "nullable": true,
             "metadata": {
-              "description": "Optional. The availability zones of the agent pool."
+              "description": "Optional. The availability zones of the agent pool. Defaults to ['1', '2']."
             }
           },
           "count": {
@@ -53,7 +53,7 @@
             "type": "bool",
             "nullable": true,
             "metadata": {
-              "description": "Optional. Whether to enable auto-scaling for the agent pool."
+              "description": "Optional. Whether to enable auto-scaling for the agent pool. Defaults to `true`."
             }
           },
           "enableEncryptionAtHost": {
@@ -808,7 +808,7 @@
         "Standard"
       ],
       "metadata": {
-        "description": "Optional. Tier of a managed cluster SKU."
+        "description": "Optional. Tier of a managed cluster SKU. Defaults to `Standard`."
       }
     },
     "kubernetesVersion": {
@@ -1419,9 +1419,9 @@
     },
     "enableAzureMonitorProfileMetrics": {
       "type": "bool",
-      "defaultValue": false,
+      "defaultValue": true,
       "metadata": {
-        "description": "Optional. Whether the metric state of the kubenetes cluster is enabled."
+        "description": "Optional. Whether the metric state of the kubenetes cluster is enabled. Defaults to `true`."
       }
     },
     "enableAzureMonitorProfileLogs": {
@@ -1821,7 +1821,7 @@
             "value": "[coalesce(parameters('agentPools'), createArray())[copyIndex()].name]"
           },
           "availabilityZones": {
-            "value": "[tryGet(coalesce(parameters('agentPools'), createArray())[copyIndex()], 'availabilityZones')]"
+            "value": "[coalesce(tryGet(coalesce(parameters('agentPools'), createArray())[copyIndex()], 'availabilityZones'), createArray('1', '2'))]"
           },
           "count": {
             "value": "[tryGet(coalesce(parameters('agentPools'), createArray())[copyIndex()], 'count')]"
@@ -1830,7 +1830,7 @@
             "value": "[tryGet(coalesce(parameters('agentPools'), createArray())[copyIndex()], 'sourceResourceId')]"
           },
           "enableAutoScaling": {
-            "value": "[tryGet(coalesce(parameters('agentPools'), createArray())[copyIndex()], 'enableAutoScaling')]"
+            "value": "[coalesce(tryGet(coalesce(parameters('agentPools'), createArray())[copyIndex()], 'enableAutoScaling'), true())]"
           },
           "enableEncryptionAtHost": {
             "value": "[tryGet(coalesce(parameters('agentPools'), createArray())[copyIndex()], 'enableEncryptionAtHost')]"
@@ -1930,8 +1930,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.26.170.59819",
-              "templateHash": "4264461851737541966"
+              "version": "0.28.1.47646",
+              "templateHash": "799879925814961597"
             },
             "name": "Azure Kubernetes Service (AKS) Managed Cluster Agent Pools",
             "description": "This module deploys an Azure Kubernetes Service (AKS) Managed Cluster Agent Pool.",
