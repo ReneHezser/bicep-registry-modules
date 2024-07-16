@@ -2,6 +2,38 @@
 
 <#
 .SYNOPSIS
+Get the Exception's and all inner exceptions messages
+
+.DESCRIPTION
+From an Exception object, get the error message and all inner exceptions messages
+
+.PARAMETER DeploymentScope
+Mandatory. The Exception to get the message and InnerException messages from
+
+.EXAMPLE
+GetExceptionMessages -Exception $PSitem.Exception
+
+Get the error message and all inner exceptions messages from the Exception object $PSitem.Exception
+#>
+function GetExceptionMessages {
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Exception]$Exception
+    )
+
+    $messages = @($Exception.Message)
+    $innerException = $Exception.InnerException
+
+    while ($null -ne $innerException) {
+        $messages += $innerException.Message
+        $innerException = $innerException.InnerException
+    }
+
+    return ($messages | Select-Object -Unique) -join ' -> '
+}
+
+<#
+.SYNOPSIS
 If a deployment failed, get its error message
 
 .DESCRIPTION
@@ -304,7 +336,7 @@ function New-TemplateDeploymentInner {
                             }
                             $exceptionMessage = Get-ErrorMessageForScope @errorInputObject
                         } else {
-                            $exceptionMessage = $PSitem.Exception.Message
+                            $exceptionMessage = GetExceptionMessages $PSitem.Exception
                         }
 
                         return @{
@@ -312,12 +344,12 @@ function New-TemplateDeploymentInner {
                             Exception       = $exceptionMessage
                         }
                     } else {
-                        throw $PSitem.Exception.Message
+                        throw GetExceptionMessages $PSitem.Exception
                     }
                     $Stoploop = $true
                 } else {
                     Write-Verbose "Resource deployment Failed.. ($retryCount/$RetryLimit) Retrying in 5 Seconds.. `n"
-                    Write-Verbose ($PSitem.Exception.Message | Out-String) -Verbose
+                    Write-Verbose (GetExceptionMessages $PSitem.Exception) -Verbose
                     Start-Sleep -Seconds 5
                     $retryCount++
                 }
