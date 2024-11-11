@@ -46,16 +46,16 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-04-01' = {
   }
 }
 
-resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: managedIdentityName
   location: location
 }
 
-resource privateDNSZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+resource privateDNSZone 'Microsoft.Network/privateDnsZones@2024-06-01' = {
   name: 'privatelink.digitaltwins.azure.net'
   location: 'global'
 
-  resource virtualNetworkLinks 'virtualNetworkLinks@2020-06-01' = {
+  resource virtualNetworkLinks 'virtualNetworkLinks@2024-06-01' = {
     name: '${virtualNetwork.name}-vnetlink'
     location: 'global'
     properties: {
@@ -67,7 +67,7 @@ resource privateDNSZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   }
 }
 
-resource eventHubNamespace 'Microsoft.EventHub/namespaces@2022-10-01-preview' = {
+resource eventHubNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {
   name: eventHubNamespaceName
   location: location
   properties: {
@@ -76,19 +76,19 @@ resource eventHubNamespace 'Microsoft.EventHub/namespaces@2022-10-01-preview' = 
     maximumThroughputUnits: 0
   }
 
-  resource eventHub 'eventhubs@2022-10-01-preview' = {
+  resource eventHub 'eventhubs@2024-01-01' = {
     name: eventHubName
   }
 }
 
-resource serviceBus 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {
+resource serviceBus 'Microsoft.ServiceBus/namespaces@2024-01-01' = {
   name: serviceBusName
   location: location
   properties: {
     zoneRedundant: false
   }
 
-  resource topic 'topics@2022-10-01-preview' = {
+  resource topic 'topics@2024-01-01' = {
     name: 'topic'
   }
 }

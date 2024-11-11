@@ -223,12 +223,7 @@ module digitalTwinsInstance_privateEndpoints 'br/public:avm/res/network/private-
         'Full'
       ).location
       lock: privateEndpoint.?lock ?? lock
-      privateDnsZoneGroup: {
-        name: privateEndpoint.?privateDnsZoneGroupName
-        privateDnsZoneGroupConfigs: [
-          { privateDnsZoneResourceId: privateEndpoint.?privateDnsZoneResourceIds }
-        ]
-      }
+      privateDnsZoneGroup: privateEndpoint.?privateDnsZoneGroup
       roleAssignments: privateEndpoint.?roleAssignments
       tags: privateEndpoint.?tags ?? tags
       customDnsConfigs: privateEndpoint.?customDnsConfigs

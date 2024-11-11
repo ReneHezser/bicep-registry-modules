@@ -25,13 +25,18 @@ resource digitalTwinsInstance 'Microsoft.DigitalTwins/digitalTwinsInstances@2023
   name: digitalTwinInstanceName
 }
 
+// workaround for https://github.com/Azure/bicep-types-az/issues/2262
+resource eventGridTopic 'Microsoft.EventGrid/topics@2022-06-15' existing = {
+  name: topicEndpoint
+}
+
 resource endpoint 'Microsoft.DigitalTwins/digitalTwinsInstances/endpoints@2023-01-31' = {
   name: name
   parent: digitalTwinsInstance
   properties: {
     endpointType: 'EventGrid'
     authenticationType: 'KeyBased'
-    TopicEndpoint: topicEndpoint
+    TopicEndpoint: eventGridTopic.properties.endpoint
     accessKey1: listkeys(eventGridDomainResourceId, '2022-06-15').key1
     accessKey2: listkeys(eventGridDomainResourceId, '2022-06-15').key2
     deadLetterSecret: deadLetterSecret

@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.31.34.60546",
-      "templateHash": "13820229348692075346"
+      "templateHash": "16907856184398877497"
     },
     "name": "Digital Twins Instances",
     "description": "This module deploys an Azure Digital Twins Instance.",
@@ -1024,7 +1024,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.31.34.60546",
-              "templateHash": "4864534392543781176"
+              "templateHash": "14097669942151375848"
             },
             "name": "Digital Twins Instance Event Grid Endpoints",
             "description": "This module deploys a Digital Twins Instance Event Grid Endpoint.",
@@ -1079,7 +1079,7 @@
               "properties": {
                 "endpointType": "EventGrid",
                 "authenticationType": "KeyBased",
-                "TopicEndpoint": "[parameters('topicEndpoint')]",
+                "TopicEndpoint": "[reference(resourceId('Microsoft.EventGrid/topics', parameters('topicEndpoint')), '2022-06-15').endpoint]",
                 "accessKey1": "[listkeys(parameters('eventGridDomainResourceId'), '2022-06-15').key1]",
                 "accessKey2": "[listkeys(parameters('eventGridDomainResourceId'), '2022-06-15').key2]",
                 "deadLetterSecret": "[parameters('deadLetterSecret')]",
@@ -1376,14 +1376,7 @@
             "value": "[coalesce(tryGet(coalesce(parameters('privateEndpoints'), createArray())[copyIndex()], 'lock'), parameters('lock'))]"
           },
           "privateDnsZoneGroup": {
-            "value": {
-              "name": "[tryGet(coalesce(parameters('privateEndpoints'), createArray())[copyIndex()], 'privateDnsZoneGroupName')]",
-              "privateDnsZoneGroupConfigs": [
-                {
-                  "privateDnsZoneResourceId": "[tryGet(coalesce(parameters('privateEndpoints'), createArray())[copyIndex()], 'privateDnsZoneResourceIds')]"
-                }
-              ]
-            }
+            "value": "[tryGet(coalesce(parameters('privateEndpoints'), createArray())[copyIndex()], 'privateDnsZoneGroup')]"
           },
           "roleAssignments": {
             "value": "[tryGet(coalesce(parameters('privateEndpoints'), createArray())[copyIndex()], 'roleAssignments')]"
