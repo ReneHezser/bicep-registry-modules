@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.31.34.60546",
-      "templateHash": "9348868386389878493"
+      "templateHash": "2786109070238755731"
     },
     "name": "Digital Twins Instance EventHub Endpoint",
     "description": "This module deploys a Digital Twins Instance EventHub Endpoint.",
@@ -121,11 +121,23 @@
     "identity": "[if(not(empty(parameters('managedIdentities'))), createObject('type', if(coalesce(tryGet(parameters('managedIdentities'), 'systemAssigned'), false()), 'SystemAssigned', if(not(empty(coalesce(tryGet(parameters('managedIdentities'), 'userAssignedResourceId'), ''))), 'UserAssigned', null())), 'userAssignedIdentity', tryGet(parameters('managedIdentities'), 'userAssignedResourceId')), null())]"
   },
   "resources": {
+    "eventHubNamespace::eventHub": {
+      "existing": true,
+      "type": "Microsoft.EventHub/namespaces/eventhubs",
+      "apiVersion": "2024-01-01",
+      "name": "[format('{0}/{1}', substring(parameters('endpointUri'), 5, sub(indexOf(parameters('endpointUri'), '.'), 5)), parameters('entityPath'))]"
+    },
     "digitalTwinsInstance": {
       "existing": true,
       "type": "Microsoft.DigitalTwins/digitalTwinsInstances",
       "apiVersion": "2023-01-31",
       "name": "[parameters('digitalTwinInstanceName')]"
+    },
+    "eventHubNamespace": {
+      "existing": true,
+      "type": "Microsoft.EventHub/namespaces",
+      "apiVersion": "2024-01-01",
+      "name": "[substring(parameters('endpointUri'), 5, sub(indexOf(parameters('endpointUri'), '.'), 5))]"
     },
     "endpoint": {
       "type": "Microsoft.DigitalTwins/digitalTwinsInstances/endpoints",
@@ -138,7 +150,7 @@
         "connectionStringSecondaryKey": "[parameters('connectionStringSecondaryKey')]",
         "deadLetterSecret": "[parameters('deadLetterSecret')]",
         "deadLetterUri": "[parameters('deadLetterUri')]",
-        "endpointUri": "[parameters('endpointUri')]",
+        "endpointUri": "[format('sb://{0}.servicebus.windows.net/', substring(parameters('endpointUri'), 5, sub(indexOf(parameters('endpointUri'), '.'), 5)))]",
         "entityPath": "[parameters('entityPath')]",
         "identity": "[variables('identity')]"
       }

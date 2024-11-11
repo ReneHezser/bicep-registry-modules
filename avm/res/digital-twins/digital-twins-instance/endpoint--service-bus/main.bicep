@@ -53,6 +53,16 @@ resource digitalTwinsInstance 'Microsoft.DigitalTwins/digitalTwinsInstances@2023
   name: digitalTwinInstanceName
 }
 
+// workaround for https://github.com/Azure/bicep-types-az/issues/2262
+resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2024-01-01' existing = {
+  // endointUri is in the format sb://<namespace>.servicebus.windows.net
+  name: substring(endpointUri, 4, indexOf(endpointUri, '.') - 5)
+
+  resource topic 'topics@2024-01-01' = {
+    name: entityPath
+  }
+}
+
 resource endpoint 'Microsoft.DigitalTwins/digitalTwinsInstances/endpoints@2023-01-31' = {
   name: name
   parent: digitalTwinsInstance
@@ -63,8 +73,8 @@ resource endpoint 'Microsoft.DigitalTwins/digitalTwinsInstances/endpoints@2023-0
     deadLetterUri: deadLetterUri
     endpointUri: endpointUri
     entityPath: entityPath
-    primaryConnectionString: primaryConnectionString
-    secondaryConnectionString: secondaryConnectionString
+    // primaryConnectionString: primaryConnectionString
+    // secondaryConnectionString: secondaryConnectionString
     identity: identity
   }
 }

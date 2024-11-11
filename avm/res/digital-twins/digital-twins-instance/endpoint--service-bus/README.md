@@ -13,6 +13,7 @@ This module deploys a Digital Twins Instance ServiceBus Endpoint.
 | Resource Type | API Version |
 | :-- | :-- |
 | `Microsoft.DigitalTwins/digitalTwinsInstances/endpoints` | [2023-01-31](https://learn.microsoft.com/en-us/azure/templates/Microsoft.DigitalTwins/2023-01-31/digitalTwinsInstances/endpoints) |
+| `Microsoft.ServiceBus/namespaces/topics` | [2024-01-01](https://learn.microsoft.com/en-us/azure/templates/Microsoft.ServiceBus/namespaces/topics) |
 
 ## Parameters
 

@@ -36,7 +36,7 @@ resource endpoint 'Microsoft.DigitalTwins/digitalTwinsInstances/endpoints@2023-0
   properties: {
     endpointType: 'EventGrid'
     authenticationType: 'KeyBased'
-    TopicEndpoint: eventGridTopic.properties.endpoint
+    TopicEndpoint: eventGridTopic.name
     accessKey1: listkeys(eventGridDomainResourceId, '2022-06-15').key1
     accessKey2: listkeys(eventGridDomainResourceId, '2022-06-15').key2
     deadLetterSecret: deadLetterSecret

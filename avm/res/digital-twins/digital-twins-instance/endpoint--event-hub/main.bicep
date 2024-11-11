@@ -53,6 +53,14 @@ resource digitalTwinsInstance 'Microsoft.DigitalTwins/digitalTwinsInstances@2023
   name: digitalTwinInstanceName
 }
 
+resource eventHubNamespace 'Microsoft.EventHub/namespaces@2024-01-01' existing = {
+  name: substring(endpointUri, 5, indexOf(endpointUri, '.') - 5)
+
+  resource eventHub 'eventhubs@2024-01-01' existing = {
+    name: entityPath
+  }
+}
+
 resource endpoint 'Microsoft.DigitalTwins/digitalTwinsInstances/endpoints@2023-01-31' = {
   name: name
   parent: digitalTwinsInstance
@@ -63,8 +71,8 @@ resource endpoint 'Microsoft.DigitalTwins/digitalTwinsInstances/endpoints@2023-0
     connectionStringSecondaryKey: connectionStringSecondaryKey
     deadLetterSecret: deadLetterSecret
     deadLetterUri: deadLetterUri
-    endpointUri: endpointUri
-    entityPath: entityPath
+    endpointUri: 'sb://${eventHubNamespace.name}.servicebus.windows.net/'
+    entityPath: eventHubNamespace::eventHub.name
     identity: identity
   }
 }

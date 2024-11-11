@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.31.34.60546",
-      "templateHash": "15742059581299377238"
+      "templateHash": "965816141658463744"
     },
     "name": "Digital Twins Instance ServiceBus Endpoint",
     "description": "This module deploys a Digital Twins Instance ServiceBus Endpoint.",
@@ -121,11 +121,22 @@
     "identity": "[if(not(empty(parameters('managedIdentities'))), createObject('type', if(coalesce(tryGet(parameters('managedIdentities'), 'systemAssigned'), false()), 'SystemAssigned', if(not(empty(coalesce(tryGet(parameters('managedIdentities'), 'userAssignedResourceId'), ''))), 'UserAssigned', null())), 'userAssignedIdentity', tryGet(parameters('managedIdentities'), 'userAssignedResourceId')), null())]"
   },
   "resources": {
+    "serviceBusNamespace::topic": {
+      "type": "Microsoft.ServiceBus/namespaces/topics",
+      "apiVersion": "2024-01-01",
+      "name": "[format('{0}/{1}', substring(parameters('endpointUri'), 4, sub(indexOf(parameters('endpointUri'), '.'), 5)), parameters('entityPath'))]"
+    },
     "digitalTwinsInstance": {
       "existing": true,
       "type": "Microsoft.DigitalTwins/digitalTwinsInstances",
       "apiVersion": "2023-01-31",
       "name": "[parameters('digitalTwinInstanceName')]"
+    },
+    "serviceBusNamespace": {
+      "existing": true,
+      "type": "Microsoft.ServiceBus/namespaces",
+      "apiVersion": "2024-01-01",
+      "name": "[substring(parameters('endpointUri'), 4, sub(indexOf(parameters('endpointUri'), '.'), 5))]"
     },
     "endpoint": {
       "type": "Microsoft.DigitalTwins/digitalTwinsInstances/endpoints",
