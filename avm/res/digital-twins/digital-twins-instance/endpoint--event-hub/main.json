@@ -5,15 +5,15 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.26.54.24096",
-      "templateHash": "1964184668152537300"
+      "version": "0.31.34.60546",
+      "templateHash": "9348868386389878493"
     },
     "name": "Digital Twins Instance EventHub Endpoint",
     "description": "This module deploys a Digital Twins Instance EventHub Endpoint.",
     "owner": "Azure/module-maintainers"
   },
   "definitions": {
-    "managedIdentitiesType": {
+    "managedIdentityAllType": {
       "type": "object",
       "properties": {
         "systemAssigned": {
@@ -23,15 +23,23 @@
             "description": "Optional. Enables system assigned managed identity on the resource."
           }
         },
-        "userAssignedResourceId": {
-          "type": "string",
+        "userAssignedResourceIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
           "nullable": true,
           "metadata": {
-            "description": "Optional. The resource ID(s) to assign to the resource."
+            "description": "Optional. The resource ID(s) to assign to the resource. Required if a user assigned identity is used for encryption."
           }
         }
       },
-      "nullable": true
+      "metadata": {
+        "description": "An AVM-aligned type for a managed identity configuration. To be used if both a system-assigned & user-assigned identities are supported by the resource provider.",
+        "__bicep_imported_from!": {
+          "sourceTemplate": "br:mcr.microsoft.com/bicep/avm/utl/types/avm-common-types:0.3.0"
+        }
+      }
     }
   },
   "parameters": {
@@ -102,7 +110,8 @@
       }
     },
     "managedIdentities": {
-      "$ref": "#/definitions/managedIdentitiesType",
+      "$ref": "#/definitions/managedIdentityAllType",
+      "nullable": true,
       "metadata": {
         "description": "Optional. The managed identity definition for this resource.  Only one type of identity is supported: system-assigned or user-assigned, but not both."
       }
@@ -132,10 +141,7 @@
         "endpointUri": "[parameters('endpointUri')]",
         "entityPath": "[parameters('entityPath')]",
         "identity": "[variables('identity')]"
-      },
-      "dependsOn": [
-        "digitalTwinsInstance"
-      ]
+      }
     }
   },
   "outputs": {

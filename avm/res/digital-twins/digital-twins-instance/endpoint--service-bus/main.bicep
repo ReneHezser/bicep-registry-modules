@@ -36,8 +36,9 @@ param primaryConnectionString string = ''
 @secure()
 param secondaryConnectionString string = ''
 
+import { managedIdentityAllType } from 'br/public:avm/utl/types/avm-common-types:0.3.0'
 @description('Optional. The managed identity definition for this resource. Only one type of identity is supported: system-assigned or user-assigned, but not both.')
-param managedIdentities managedIdentitiesType
+param managedIdentities managedIdentityAllType?
 
 var identity = !empty(managedIdentities)
   ? {
@@ -80,15 +81,3 @@ output name string = endpoint.name
 @description('The principal ID of the system assigned identity. Note: As of 2024-03 is not exported by API.')
 #disable-next-line BCP187
 output systemAssignedMIPrincipalId string = endpoint.?identity.?principalId ?? ''
-
-// =============== //
-//   Definitions   //
-// =============== //
-
-type managedIdentitiesType = {
-  @description('Optional. Enables system assigned managed identity on the resource.')
-  systemAssigned: bool?
-
-  @description('Optional. The resource ID(s) to assign to the resource.')
-  userAssignedResourceId: string?
-}?
