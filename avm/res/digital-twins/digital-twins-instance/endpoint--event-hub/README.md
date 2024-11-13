@@ -21,18 +21,18 @@ This module deploys a Digital Twins Instance EventHub Endpoint.
 | Parameter | Type | Description |
 | :-- | :-- | :-- |
 | [`connectionStringPrimaryKey`](#parameter-connectionstringprimarykey) | securestring | PrimaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased". |
+| [`connectionStringSecondaryKey`](#parameter-connectionstringsecondarykey) | securestring | SecondaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Only used if the `authenticationType` is "KeyBased". |
+| [`deadLetterSecret`](#parameter-deadlettersecret) | securestring | Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased". |
+| [`deadLetterUri`](#parameter-deadletteruri) | string | Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is "IdentityBased". |
 | [`digitalTwinInstanceName`](#parameter-digitaltwininstancename) | string | The name of the parent Digital Twin Instance resource. Required if the template is used in a standalone deployment. |
+| [`endpointUri`](#parameter-endpointuri) | string | The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net). Required if the `authenticationType` is "IdentityBased". |
+| [`entityPath`](#parameter-entitypath) | string | The EventHub name in the EventHub namespace for identity-based authentication. Required if the `authenticationType` is "IdentityBased". |
 
 **Optional parameters**
 
 | Parameter | Type | Description |
 | :-- | :-- | :-- |
 | [`authenticationType`](#parameter-authenticationtype) | string | Specifies the authentication type being used for connecting to the endpoint. If 'KeyBased' is selected, a connection string must be specified (at least the primary connection string). If 'IdentityBased' is selected, the endpointUri and entityPath properties must be specified. |
-| [`connectionStringSecondaryKey`](#parameter-connectionstringsecondarykey) | securestring | SecondaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Only used if the `authenticationType` is "KeyBased". |
-| [`deadLetterSecret`](#parameter-deadlettersecret) | securestring | Dead letter storage secret for key-based authentication. Will be obfuscated during read. |
-| [`deadLetterUri`](#parameter-deadletteruri) | string | Dead letter storage URL for identity-based authentication. |
-| [`endpointUri`](#parameter-endpointuri) | string | The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net). |
-| [`entityPath`](#parameter-entitypath) | string | The EventHub name in the EventHub namespace for identity-based authentication. |
 | [`managedIdentities`](#parameter-managedidentities) | object | The managed identity definition for this resource.  Only one type of identity is supported: system-assigned or user-assigned, but not both. |
 | [`name`](#parameter-name) | string | The name of the Digital Twin Endpoint. |
 
@@ -44,12 +44,52 @@ PrimaryConnectionString of the endpoint for key-based authentication. Will be ob
 - Type: securestring
 - Default: `''`
 
+### Parameter: `connectionStringSecondaryKey`
+
+SecondaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Only used if the `authenticationType` is "KeyBased".
+
+- Required: No
+- Type: securestring
+- Default: `''`
+
+### Parameter: `deadLetterSecret`
+
+Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased".
+
+- Required: No
+- Type: securestring
+- Default: `''`
+
+### Parameter: `deadLetterUri`
+
+Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is "IdentityBased".
+
+- Required: No
+- Type: string
+- Default: `''`
+
 ### Parameter: `digitalTwinInstanceName`
 
 The name of the parent Digital Twin Instance resource. Required if the template is used in a standalone deployment.
 
 - Required: Yes
 - Type: string
+
+### Parameter: `endpointUri`
+
+The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net). Required if the `authenticationType` is "IdentityBased".
+
+- Required: No
+- Type: string
+- Default: `''`
+
+### Parameter: `entityPath`
+
+The EventHub name in the EventHub namespace for identity-based authentication. Required if the `authenticationType` is "IdentityBased".
+
+- Required: No
+- Type: string
+- Default: `''`
 
 ### Parameter: `authenticationType`
 
@@ -65,46 +105,6 @@ Specifies the authentication type being used for connecting to the endpoint. If 
     'KeyBased'
   ]
   ```
-
-### Parameter: `connectionStringSecondaryKey`
-
-SecondaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Only used if the `authenticationType` is "KeyBased".
-
-- Required: No
-- Type: securestring
-- Default: `''`
-
-### Parameter: `deadLetterSecret`
-
-Dead letter storage secret for key-based authentication. Will be obfuscated during read.
-
-- Required: No
-- Type: securestring
-- Default: `''`
-
-### Parameter: `deadLetterUri`
-
-Dead letter storage URL for identity-based authentication.
-
-- Required: No
-- Type: string
-- Default: `''`
-
-### Parameter: `endpointUri`
-
-The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net).
-
-- Required: No
-- Type: string
-- Default: `''`
-
-### Parameter: `entityPath`
-
-The EventHub name in the EventHub namespace for identity-based authentication.
-
-- Required: No
-- Type: string
-- Default: `''`
 
 ### Parameter: `managedIdentities`
 

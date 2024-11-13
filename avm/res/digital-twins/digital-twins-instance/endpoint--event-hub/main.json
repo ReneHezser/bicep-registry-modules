@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.31.34.60546",
-      "templateHash": "2786109070238755731"
+      "templateHash": "7154218047825646568"
     },
     "name": "Digital Twins Instance EventHub Endpoint",
     "description": "This module deploys a Digital Twins Instance EventHub Endpoint.",
@@ -71,14 +71,14 @@
       "type": "securestring",
       "defaultValue": "",
       "metadata": {
-        "description": "Optional. Dead letter storage secret for key-based authentication. Will be obfuscated during read."
+        "description": "Conditional. Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is \"KeyBased\"."
       }
     },
     "deadLetterUri": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Optional. Dead letter storage URL for identity-based authentication."
+        "description": "Conditional. Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is \"IdentityBased\"."
       }
     },
     "connectionStringPrimaryKey": {
@@ -92,21 +92,21 @@
       "type": "securestring",
       "defaultValue": "",
       "metadata": {
-        "description": "Optional. SecondaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Only used if the `authenticationType` is \"KeyBased\"."
+        "description": "Conditional. SecondaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Only used if the `authenticationType` is \"KeyBased\"."
       }
     },
     "entityPath": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Optional. The EventHub name in the EventHub namespace for identity-based authentication."
+        "description": "Conditional. The EventHub name in the EventHub namespace for identity-based authentication. Required if the `authenticationType` is \"IdentityBased\"."
       }
     },
     "endpointUri": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "Optional. The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net)."
+        "description": "Conditional. The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net). Required if the `authenticationType` is \"IdentityBased\"."
       }
     },
     "managedIdentities": {
@@ -121,12 +121,6 @@
     "identity": "[if(not(empty(parameters('managedIdentities'))), createObject('type', if(coalesce(tryGet(parameters('managedIdentities'), 'systemAssigned'), false()), 'SystemAssigned', if(not(empty(coalesce(tryGet(parameters('managedIdentities'), 'userAssignedResourceId'), ''))), 'UserAssigned', null())), 'userAssignedIdentity', tryGet(parameters('managedIdentities'), 'userAssignedResourceId')), null())]"
   },
   "resources": {
-    "eventHubNamespace::eventHub": {
-      "existing": true,
-      "type": "Microsoft.EventHub/namespaces/eventhubs",
-      "apiVersion": "2024-01-01",
-      "name": "[format('{0}/{1}', substring(parameters('endpointUri'), 5, sub(indexOf(parameters('endpointUri'), '.'), 5)), parameters('entityPath'))]"
-    },
     "digitalTwinsInstance": {
       "existing": true,
       "type": "Microsoft.DigitalTwins/digitalTwinsInstances",
@@ -138,6 +132,12 @@
       "type": "Microsoft.EventHub/namespaces",
       "apiVersion": "2024-01-01",
       "name": "[substring(parameters('endpointUri'), 5, sub(indexOf(parameters('endpointUri'), '.'), 5))]"
+    },
+    "eventHub": {
+      "existing": true,
+      "type": "Microsoft.EventHub/namespaces/eventhubs",
+      "apiVersion": "2024-01-01",
+      "name": "[format('{0}/{1}', substring(parameters('endpointUri'), 5, sub(indexOf(parameters('endpointUri'), '.'), 5)), parameters('entityPath'))]"
     },
     "endpoint": {
       "type": "Microsoft.DigitalTwins/digitalTwinsInstances/endpoints",

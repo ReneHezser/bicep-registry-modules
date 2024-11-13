@@ -91,19 +91,25 @@ module testDeployment '../../../main.bicep' = [
         {
           name: 'ServiceBusPrimary'
           authenticationType: 'IdentityBased'
-          endpointUri: 'sb://${nestedDependencies.outputs.serviceBusName}.servicebus.windows.net/'
-          entityPath: nestedDependencies.outputs.serviceBusTopicName
-          managedIdentities: {
-            userAssignedResourceId: nestedDependencies.outputs.managedIdentityResourceId
+          identity: {
+            userAssignedResourceIds: [
+              nestedDependencies.outputs.managedIdentityResourceId
+            ]
+          }
+          endpointType: {
+            endpointUri: 'sb://${nestedDependencies.outputs.serviceBusName}.servicebus.windows.net/'
+            entityPath: nestedDependencies.outputs.serviceBusTopicName
           }
         }
         {
           name: 'ServiceBusSeconday'
           authenticationType: 'IdentityBased'
-          endpointUri: 'sb://${nestedDependencies.outputs.serviceBusName}.servicebus.windows.net/'
-          entityPath: nestedDependencies.outputs.serviceBusTopicName
-          managedIdentities: {
+          identity: {
             systemAssigned: true
+          }
+          endpointType: {
+            endpointUri: 'sb://${nestedDependencies.outputs.serviceBusName}.servicebus.windows.net/'
+            entityPath: nestedDependencies.outputs.serviceBusTopicName
           }
         }
       ]

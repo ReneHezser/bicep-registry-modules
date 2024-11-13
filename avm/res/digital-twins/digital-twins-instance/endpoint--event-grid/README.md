@@ -27,14 +27,14 @@ This module deploys a Digital Twins Instance Event Grid Endpoint.
 
 | Parameter | Type | Description |
 | :-- | :-- | :-- |
+| [`deadLetterSecret`](#parameter-deadlettersecret) | securestring | Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased". |
+| [`deadLetterUri`](#parameter-deadletteruri) | string | Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is "IdentityBased". |
 | [`digitalTwinInstanceName`](#parameter-digitaltwininstancename) | string | The name of the parent Digital Twin Instance resource. Required if the template is used in a standalone deployment. |
 
 **Optional parameters**
 
 | Parameter | Type | Description |
 | :-- | :-- | :-- |
-| [`deadLetterSecret`](#parameter-deadlettersecret) | securestring | Dead letter storage secret for key-based authentication. Will be obfuscated during read. |
-| [`deadLetterUri`](#parameter-deadletteruri) | string | Dead letter storage URL for identity-based authentication. |
 | [`name`](#parameter-name) | string | The name of the Digital Twin Endpoint. |
 
 ### Parameter: `eventGridDomainResourceId`
@@ -51,16 +51,9 @@ EventGrid Topic Endpoint.
 - Required: Yes
 - Type: string
 
-### Parameter: `digitalTwinInstanceName`
-
-The name of the parent Digital Twin Instance resource. Required if the template is used in a standalone deployment.
-
-- Required: Yes
-- Type: string
-
 ### Parameter: `deadLetterSecret`
 
-Dead letter storage secret for key-based authentication. Will be obfuscated during read.
+Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased".
 
 - Required: No
 - Type: securestring
@@ -68,11 +61,18 @@ Dead letter storage secret for key-based authentication. Will be obfuscated duri
 
 ### Parameter: `deadLetterUri`
 
-Dead letter storage URL for identity-based authentication.
+Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is "IdentityBased".
 
 - Required: No
 - Type: string
 - Default: `''`
+
+### Parameter: `digitalTwinInstanceName`
+
+The name of the parent Digital Twin Instance resource. Required if the template is used in a standalone deployment.
+
+- Required: Yes
+- Type: string
 
 ### Parameter: `name`
 
