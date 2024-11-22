@@ -28,7 +28,7 @@ param eventHubEndpoints array?
 param eventGridEndpoints array?
 
 @description('Optional. Service Bus Endpoint.')
-param serviceBusEndpoints endpointResourceType[]?
+param serviceBusEndpoints array?
 
 import { privateEndpointSingleServiceType } from 'br/public:avm/utl/types/avm-common-types:0.3.0'
 @description('Optional. Configuration details for private endpoints. For security reasons, it is recommended to use private endpoints whenever possible.')
@@ -156,10 +156,11 @@ module digitalTwinsInstance_eventGridEndpoints 'endpoint--event-grid/main.bicep'
     params: {
       digitalTwinInstanceName: digitalTwinsInstance.name
       name: eventGridEndpoint.?name ?? 'EventGridEndpoint'
-      topicEndpoint: eventGridEndpoint.?topicEndpoint ?? ''
-      deadLetterSecret: eventGridEndpoint.?deadLetterSecret ?? ''
-      deadLetterUri: eventGridEndpoint.?deadLetterUri ?? ''
-      eventGridDomainResourceId: eventGridEndpoint.?eventGridDomainId ?? ''
+      eventGridTopicEndpoint: eventGridEndpoint.topicEndpoint
+      // eventGridTopicName: eventGridEndpoint.eventGridTopicName
+      deadLetterSecret: eventGridEndpoint.?deadLetterSecret
+      deadLetterUri: eventGridEndpoint.?deadLetterUri
+      eventGridDomainResourceId: eventGridEndpoint.eventGridDomainId
     }
   }
 ]
@@ -311,44 +312,3 @@ output location string = digitalTwinsInstance.location
 
 @description('The principal ID of the system assigned identity.')
 output systemAssignedMIPrincipalId string = digitalTwinsInstance.?identity.?principalId ?? ''
-
-// =============== //
-//   Definitions   //
-// =============== //
-
-@description('Optional. Connection information for the endpoint, to which data is sent.')
-@export()
-type endpointResourceType = {
-  @description('Required. The name of endpoint.')
-  name: string
-
-  @description('Required. Specifies the authentication type being used for connecting to the endpoint. Possible values are "KeyBased" or "IdentityBased".')
-  authenticationType: string
-
-  @description('Conditional. Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased".')
-  deadLetterSecret: string?
-
-  @description('Conditional. Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is "IdentityBased".')
-  deadLetterUri: string?
-
-  @description('Conditional. The EventHub name in the EventHub namespace for identity-based authentication. Required if the `authenticationType` is "IdentityBased".')
-  identity: managedIdentityAllType?
-
-  @description('Required. The data for the endpoint.')
-  endpointType: eventGridEndpointType //| eventHubEndpointType //| serviceBusEndpointType
-}
-
-@export()
-type serviceBusEndpointType = {
-  @description('Conditional. 	The URL of the ServiceBus namespace for identity-based authentication. It must include the protocol \'sb://\' (i.e. sb://xyz.servicebus.windows.net). Required if the `authenticationType` is "IdentityBased".')
-  endpointUri: string?
-
-  @description('Conditional. The ServiceBus Topic name for identity-based authentication. Required if the `authenticationType` is "IdentityBased".')
-  entityPath: string?
-
-  @description('Conditional. PrimaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased".')
-  primaryConnectionString: string?
-
-  @description('Conditional. SecondaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Only used if the `authenticationType` is "KeyBased".')
-  secondaryConnectionString: string?
-}

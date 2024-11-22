@@ -39,9 +39,10 @@ module nestedDependencies 'dependencies.bicep' = {
     virtualNetworkName: 'dep-${namePrefix}-vnet-${serviceShort}'
     managedIdentityName: 'dep-${namePrefix}-msi-${serviceShort}'
     eventHubName: 'dt-${serviceShort}-evh-01'
-    eventHubNamespaceName: 'dt-${serviceShort}-evhns-01'
+    eventHubNamespaceName: 'dt-${serviceShort}-evhns-01-${uniqueString(subscription().id)}'
     serviceBusName: 'dt-${serviceShort}-sb-01'
     eventGridDomainName: 'dt-${serviceShort}-evg-01'
+    eventGridTopicName: 'dt-${serviceShort}-evgt-01'
   }
 }
 
@@ -91,12 +92,8 @@ module testDeployment '../../../main.bicep' = [
         {
           name: 'ServiceBusPrimary'
           authenticationType: 'IdentityBased'
-          identity: {
-            userAssignedResourceIds: [
-              nestedDependencies.outputs.managedIdentityResourceId
-            ]
-          }
-          endpointType: {
+          managedIdentities: {
+            userAssignedResourceId: nestedDependencies.outputs.managedIdentityResourceId
             endpointUri: 'sb://${nestedDependencies.outputs.serviceBusName}.servicebus.windows.net/'
             entityPath: nestedDependencies.outputs.serviceBusTopicName
           }
@@ -104,19 +101,18 @@ module testDeployment '../../../main.bicep' = [
         {
           name: 'ServiceBusSeconday'
           authenticationType: 'IdentityBased'
-          identity: {
+          managedIdentities: {
             systemAssigned: true
           }
-          endpointType: {
-            endpointUri: 'sb://${nestedDependencies.outputs.serviceBusName}.servicebus.windows.net/'
-            entityPath: nestedDependencies.outputs.serviceBusTopicName
-          }
+          endpointUri: 'sb://${nestedDependencies.outputs.serviceBusName}.servicebus.windows.net/'
+          entityPath: nestedDependencies.outputs.serviceBusTopicName
         }
       ]
       eventGridEndpoints: [
         {
           eventGridDomainId: nestedDependencies.outputs.eventGridDomainResourceId
-          topicEndpoint: nestedDependencies.outputs.eventGridEndpoint
+          topicEndpoint: nestedDependencies.outputs.eventGridTopicEndpoint
+          eventGridTopicName: nestedDependencies.outputs.eventGridTopicName
         }
       ]
       diagnosticSettings: [

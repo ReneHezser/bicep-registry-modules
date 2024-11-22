@@ -5,8 +5,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.34.60546",
-      "templateHash": "1319529435999837736"
+      "version": "0.31.92.45157",
+      "templateHash": "1548468564591965388"
     },
     "name": "Digital Twins Instances",
     "description": "This module deploys an Azure Digital Twins Instance.",
@@ -809,15 +809,15 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.34.60546",
-              "templateHash": "7154218047825646568"
+              "version": "0.31.92.45157",
+              "templateHash": "14613455485051973808"
             },
             "name": "Digital Twins Instance EventHub Endpoint",
             "description": "This module deploys a Digital Twins Instance EventHub Endpoint.",
             "owner": "Azure/module-maintainers"
           },
           "definitions": {
-            "managedIdentityAllType": {
+            "managedIdentityOnlySysAssignedType": {
               "type": "object",
               "properties": {
                 "systemAssigned": {
@@ -826,20 +826,10 @@
                   "metadata": {
                     "description": "Optional. Enables system assigned managed identity on the resource."
                   }
-                },
-                "userAssignedResourceIds": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "nullable": true,
-                  "metadata": {
-                    "description": "Optional. The resource ID(s) to assign to the resource. Required if a user assigned identity is used for encryption."
-                  }
                 }
               },
               "metadata": {
-                "description": "An AVM-aligned type for a managed identity configuration. To be used if both a system-assigned & user-assigned identities are supported by the resource provider.",
+                "description": "An AVM-aligned type for a managed identity configuration. To be used if only system-assigned identities are supported by the resource provider.",
                 "__bicep_imported_from!": {
                   "sourceTemplate": "br:mcr.microsoft.com/bicep/avm/utl/types/avm-common-types:0.3.0"
                 }
@@ -875,14 +865,14 @@
               "type": "securestring",
               "defaultValue": "",
               "metadata": {
-                "description": "Conditional. Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is \"KeyBased\"."
+                "description": "Optional. Dead letter storage secret for key-based authentication. Will be obfuscated during read."
               }
             },
             "deadLetterUri": {
               "type": "string",
               "defaultValue": "",
               "metadata": {
-                "description": "Conditional. Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is \"IdentityBased\"."
+                "description": "Optional. Dead letter storage URL for identity-based authentication."
               }
             },
             "connectionStringPrimaryKey": {
@@ -896,28 +886,27 @@
               "type": "securestring",
               "defaultValue": "",
               "metadata": {
-                "description": "Conditional. SecondaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Only used if the `authenticationType` is \"KeyBased\"."
+                "description": "Optional. SecondaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Only used if the `authenticationType` is \"KeyBased\"."
               }
             },
             "entityPath": {
               "type": "string",
               "defaultValue": "",
               "metadata": {
-                "description": "Conditional. The EventHub name in the EventHub namespace for identity-based authentication. Required if the `authenticationType` is \"IdentityBased\"."
+                "description": "Optional. The EventHub name in the EventHub namespace for identity-based authentication."
               }
             },
             "endpointUri": {
               "type": "string",
               "defaultValue": "",
               "metadata": {
-                "description": "Conditional. The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net). Required if the `authenticationType` is \"IdentityBased\"."
+                "description": "Optional. The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net)."
               }
             },
             "managedIdentities": {
-              "$ref": "#/definitions/managedIdentityAllType",
-              "nullable": true,
+              "$ref": "#/definitions/managedIdentityOnlySysAssignedType",
               "metadata": {
-                "description": "Optional. The managed identity definition for this resource.  Only one type of identity is supported: system-assigned or user-assigned, but not both."
+                "description": "Optional. The managed identity definition for this resource."
               }
             }
           },
@@ -931,18 +920,6 @@
               "apiVersion": "2023-01-31",
               "name": "[parameters('digitalTwinInstanceName')]"
             },
-            "eventHubNamespace": {
-              "existing": true,
-              "type": "Microsoft.EventHub/namespaces",
-              "apiVersion": "2024-01-01",
-              "name": "[substring(parameters('endpointUri'), 5, sub(indexOf(parameters('endpointUri'), '.'), 5))]"
-            },
-            "eventHub": {
-              "existing": true,
-              "type": "Microsoft.EventHub/namespaces/eventhubs",
-              "apiVersion": "2024-01-01",
-              "name": "[format('{0}/{1}', substring(parameters('endpointUri'), 5, sub(indexOf(parameters('endpointUri'), '.'), 5)), parameters('entityPath'))]"
-            },
             "endpoint": {
               "type": "Microsoft.DigitalTwins/digitalTwinsInstances/endpoints",
               "apiVersion": "2023-01-31",
@@ -954,10 +931,13 @@
                 "connectionStringSecondaryKey": "[parameters('connectionStringSecondaryKey')]",
                 "deadLetterSecret": "[parameters('deadLetterSecret')]",
                 "deadLetterUri": "[parameters('deadLetterUri')]",
-                "endpointUri": "[format('sb://{0}.servicebus.windows.net/', substring(parameters('endpointUri'), 5, sub(indexOf(parameters('endpointUri'), '.'), 5)))]",
+                "endpointUri": "[parameters('endpointUri')]",
                 "entityPath": "[parameters('entityPath')]",
                 "identity": "[variables('identity')]"
-              }
+              },
+              "dependsOn": [
+                "digitalTwinsInstance"
+              ]
             }
           },
           "outputs": {
@@ -1016,17 +996,17 @@
           "name": {
             "value": "[coalesce(tryGet(coalesce(parameters('eventGridEndpoints'), createArray())[copyIndex()], 'name'), 'EventGridEndpoint')]"
           },
-          "topicEndpoint": {
-            "value": "[coalesce(tryGet(coalesce(parameters('eventGridEndpoints'), createArray())[copyIndex()], 'topicEndpoint'), '')]"
+          "eventGridTopicEndpoint": {
+            "value": "[coalesce(parameters('eventGridEndpoints'), createArray())[copyIndex()].topicEndpoint]"
           },
           "deadLetterSecret": {
-            "value": "[coalesce(tryGet(coalesce(parameters('eventGridEndpoints'), createArray())[copyIndex()], 'deadLetterSecret'), '')]"
+            "value": "[tryGet(coalesce(parameters('eventGridEndpoints'), createArray())[copyIndex()], 'deadLetterSecret')]"
           },
           "deadLetterUri": {
-            "value": "[coalesce(tryGet(coalesce(parameters('eventGridEndpoints'), createArray())[copyIndex()], 'deadLetterUri'), '')]"
+            "value": "[tryGet(coalesce(parameters('eventGridEndpoints'), createArray())[copyIndex()], 'deadLetterUri')]"
           },
           "eventGridDomainResourceId": {
-            "value": "[coalesce(tryGet(coalesce(parameters('eventGridEndpoints'), createArray())[copyIndex()], 'eventGridDomainId'), '')]"
+            "value": "[coalesce(parameters('eventGridEndpoints'), createArray())[copyIndex()].eventGridDomainId]"
           }
         },
         "template": {
@@ -1035,8 +1015,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.34.60546",
-              "templateHash": "13910791566980480942"
+              "version": "0.31.92.45157",
+              "templateHash": "6112908085284442887"
             },
             "name": "Digital Twins Instance Event Grid Endpoints",
             "description": "This module deploys a Digital Twins Instance Event Grid Endpoint.",
@@ -1056,7 +1036,7 @@
                 "description": "Conditional. The name of the parent Digital Twin Instance resource. Required if the template is used in a standalone deployment."
               }
             },
-            "topicEndpoint": {
+            "eventGridTopicEndpoint": {
               "type": "string",
               "metadata": {
                 "description": "Required. EventGrid Topic Endpoint."
@@ -1072,14 +1052,14 @@
               "type": "securestring",
               "defaultValue": "",
               "metadata": {
-                "description": "Conditional. Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is \"KeyBased\"."
+                "description": "Optional. Dead letter storage secret for key-based authentication. Will be obfuscated during read."
               }
             },
             "deadLetterUri": {
               "type": "string",
               "defaultValue": "",
               "metadata": {
-                "description": "Conditional. Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is \"IdentityBased\"."
+                "description": "Optional. Dead letter storage URL for identity-based authentication."
               }
             }
           },
@@ -1091,7 +1071,7 @@
               "properties": {
                 "endpointType": "EventGrid",
                 "authenticationType": "KeyBased",
-                "TopicEndpoint": "[parameters('topicEndpoint')]",
+                "TopicEndpoint": "[parameters('eventGridTopicEndpoint')]",
                 "accessKey1": "[listkeys(parameters('eventGridDomainResourceId'), '2022-06-15').key1]",
                 "accessKey2": "[listkeys(parameters('eventGridDomainResourceId'), '2022-06-15').key2]",
                 "deadLetterSecret": "[parameters('deadLetterSecret')]",
@@ -1180,15 +1160,15 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.34.60546",
-              "templateHash": "5925384455978090654"
+              "version": "0.31.92.45157",
+              "templateHash": "15942437202095615656"
             },
             "name": "Digital Twins Instance ServiceBus Endpoint",
             "description": "This module deploys a Digital Twins Instance ServiceBus Endpoint.",
             "owner": "Azure/module-maintainers"
           },
           "definitions": {
-            "managedIdentityAllType": {
+            "managedIdentityOnlySysAssignedType": {
               "type": "object",
               "properties": {
                 "systemAssigned": {
@@ -1197,20 +1177,10 @@
                   "metadata": {
                     "description": "Optional. Enables system assigned managed identity on the resource."
                   }
-                },
-                "userAssignedResourceIds": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "nullable": true,
-                  "metadata": {
-                    "description": "Optional. The resource ID(s) to assign to the resource. Required if a user assigned identity is used for encryption."
-                  }
                 }
               },
               "metadata": {
-                "description": "An AVM-aligned type for a managed identity configuration. To be used if both a system-assigned & user-assigned identities are supported by the resource provider.",
+                "description": "An AVM-aligned type for a managed identity configuration. To be used if only system-assigned identities are supported by the resource provider.",
                 "__bicep_imported_from!": {
                   "sourceTemplate": "br:mcr.microsoft.com/bicep/avm/utl/types/avm-common-types:0.3.0"
                 }
@@ -1246,28 +1216,28 @@
               "type": "securestring",
               "defaultValue": "",
               "metadata": {
-                "description": "Conditional. Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is \"KeyBased\"."
+                "description": "Optional. Dead letter storage secret for key-based authentication. Will be obfuscated during read."
               }
             },
             "deadLetterUri": {
               "type": "string",
               "defaultValue": "",
               "metadata": {
-                "description": "Conditional. Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is \"IdentityBased\"."
-              }
-            },
-            "entityPath": {
-              "type": "string",
-              "defaultValue": "",
-              "metadata": {
-                "description": "Conditional. The EventHub name in the EventHub namespace for identity-based authentication. Required if the `authenticationType` is \"IdentityBased\"."
+                "description": "Optional. Dead letter storage URL for identity-based authentication."
               }
             },
             "endpointUri": {
               "type": "string",
               "defaultValue": "",
               "metadata": {
-                "description": "Conditional. The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net). Required if the `authenticationType` is \"IdentityBased\"."
+                "description": "Optional. The URL of the ServiceBus namespace for identity-based authentication. It must include the protocol 'sb://' (e.g. sb://xyz.servicebus.windows.net)."
+              }
+            },
+            "entityPath": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Optional. The ServiceBus Topic name for identity-based authentication."
               }
             },
             "primaryConnectionString": {
@@ -1285,10 +1255,9 @@
               }
             },
             "managedIdentities": {
-              "$ref": "#/definitions/managedIdentityAllType",
-              "nullable": true,
+              "$ref": "#/definitions/managedIdentityOnlySysAssignedType",
               "metadata": {
-                "description": "Optional. The managed identity definition for this resource. Only one type of identity is supported: system-assigned or user-assigned, but not both."
+                "description": "Optional. The managed identity definition for this resource."
               }
             }
           },
@@ -1309,10 +1278,17 @@
               "properties": {
                 "endpointType": "ServiceBus",
                 "authenticationType": "[parameters('authenticationType')]",
-                "endpointUri": "[if(equals(parameters('authenticationType'), 'IdentityBased'), parameters('endpointUri'), null())]",
-                "entityPath": "[if(equals(parameters('authenticationType'), 'IdentityBased'), parameters('entityPath'), null())]",
-                "identity": "[if(equals(parameters('authenticationType'), 'IdentityBased'), variables('identity'), null())]"
-              }
+                "deadLetterSecret": "[parameters('deadLetterSecret')]",
+                "deadLetterUri": "[parameters('deadLetterUri')]",
+                "endpointUri": "[parameters('endpointUri')]",
+                "entityPath": "[parameters('entityPath')]",
+                "primaryConnectionString": "[parameters('primaryConnectionString')]",
+                "secondaryConnectionString": "[parameters('secondaryConnectionString')]",
+                "identity": "[variables('identity')]"
+              },
+              "dependsOn": [
+                "digitalTwinsInstance"
+              ]
             }
           },
           "outputs": {

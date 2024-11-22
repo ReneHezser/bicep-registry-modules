@@ -19,6 +19,9 @@ param serviceBusName string
 @description('Required. Event Grid Domain name.')
 param eventGridDomainName string
 
+@description('Required. Event Grid Topic name.')
+param eventGridTopicName string
+
 var addressPrefix = '10.0.0.0/16'
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-04-01' = {
@@ -76,9 +79,13 @@ resource eventHubNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {
     maximumThroughputUnits: 0
   }
 
-  resource eventHub 'eventhubs@2024-01-01' = {
-    name: eventHubName
-  }
+  // resource eventHub 'eventhubs@2024-01-01' = {
+  //   name: eventHubName
+  // }
+}
+resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2024-01-01' = {
+  name: eventHubName
+  parent: eventHubNamespace
 }
 
 resource serviceBus 'Microsoft.ServiceBus/namespaces@2024-01-01' = {
@@ -99,10 +106,10 @@ resource eventGridDomain 'Microsoft.EventGrid/domains@2022-06-15' = {
   properties: {
     disableLocalAuth: false
   }
-
-  resource topic 'topics@2022-06-15' = {
-    name: 'topic'
-  }
+}
+resource eventGridTopic 'Microsoft.EventGrid/topics@2022-06-15' = {
+  name: eventGridTopicName
+  location: location
 }
 
 resource eventHubNamespaceRbacAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
@@ -144,10 +151,10 @@ output privateDNSZoneResourceId string = privateDNSZone.id
 output eventhubNamespaceName string = eventHubNamespace.name
 
 @description('The resource ID of the created Event Hub Namespace.')
-output eventHubResourceId string = eventHubNamespace::eventHub.id
+output eventHubResourceId string = eventHub.id // eventHubNamespace::eventHub.id
 
 @description('The name of the Event Hub.')
-output eventhubName string = eventHubNamespace::eventHub.name
+output eventhubName string = eventHub.name // eventHubNamespace::eventHub.name
 
 @description('The name of the Service Bus Namespace.')
 output serviceBusName string = serviceBus.name
@@ -155,11 +162,14 @@ output serviceBusName string = serviceBus.name
 @description('The name of the Service Bus Topic.')
 output serviceBusTopicName string = serviceBus::topic.name
 
-@description('The Event Grid endpoint uri.')
-output eventGridEndpoint string = eventGridDomain.properties.endpoint
+@description('The Event Grid Topic endpoint uri.')
+output eventGridTopicEndpoint string = eventGridTopic.properties.endpoint
 
 @description('The resource ID of the created Event Grid Topic.')
-output eventGridTopicResourceId string = eventGridDomain::topic.id
+output eventGridTopicResourceId string = eventGridTopic.id
+
+@description('The name of the Event Grid Topic.')
+output eventGridTopicName string = eventGridTopic.name
 
 @description('The resource ID of the created Event Grid Domain.')
 output eventGridDomainResourceId string = eventGridDomain.id

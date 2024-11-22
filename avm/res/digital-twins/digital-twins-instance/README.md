@@ -122,6 +122,7 @@ module digitalTwinsInstance 'br/public:avm/res/digital-twins/digital-twins-insta
     eventGridEndpoints: [
       {
         eventGridDomainId: '<eventGridDomainId>'
+        eventGridTopicName: '<eventGridTopicName>'
         topicEndpoint: '<topicEndpoint>'
       }
     ]
@@ -178,9 +179,9 @@ module digitalTwinsInstance 'br/public:avm/res/digital-twins/digital-twins-insta
     serviceBusEndpoints: [
       {
         authenticationType: 'IdentityBased'
-        endpointUri: '<endpointUri>'
-        entityPath: '<entityPath>'
         managedIdentities: {
+          endpointUri: '<endpointUri>'
+          entityPath: '<entityPath>'
           userAssignedResourceId: '<userAssignedResourceId>'
         }
         name: 'ServiceBusPrimary'
@@ -241,6 +242,7 @@ module digitalTwinsInstance 'br/public:avm/res/digital-twins/digital-twins-insta
       "value": [
         {
           "eventGridDomainId": "<eventGridDomainId>",
+          "eventGridTopicName": "<eventGridTopicName>",
           "topicEndpoint": "<topicEndpoint>"
         }
       ]
@@ -311,9 +313,9 @@ module digitalTwinsInstance 'br/public:avm/res/digital-twins/digital-twins-insta
       "value": [
         {
           "authenticationType": "IdentityBased",
-          "endpointUri": "<endpointUri>",
-          "entityPath": "<entityPath>",
           "managedIdentities": {
+            "endpointUri": "<endpointUri>",
+            "entityPath": "<entityPath>",
             "userAssignedResourceId": "<userAssignedResourceId>"
           },
           "name": "ServiceBusPrimary"
@@ -370,6 +372,7 @@ param diagnosticSettings = [
 param eventGridEndpoints = [
   {
     eventGridDomainId: '<eventGridDomainId>'
+    eventGridTopicName: '<eventGridTopicName>'
     topicEndpoint: '<topicEndpoint>'
   }
 ]
@@ -426,9 +429,9 @@ param roleAssignments = [
 param serviceBusEndpoints = [
   {
     authenticationType: 'IdentityBased'
-    endpointUri: '<endpointUri>'
-    entityPath: '<entityPath>'
     managedIdentities: {
+      endpointUri: '<endpointUri>'
+      entityPath: '<entityPath>'
       userAssignedResourceId: '<userAssignedResourceId>'
     }
     name: 'ServiceBusPrimary'

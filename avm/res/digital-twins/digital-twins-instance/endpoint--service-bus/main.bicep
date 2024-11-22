@@ -15,18 +15,18 @@ param digitalTwinInstanceName string
 @description('Optional. Specifies the authentication type being used for connecting to the endpoint. If \'KeyBased\' is selected, a connection string must be specified (at least the primary connection string). If \'IdentityBased\' is selected, the endpointUri and entityPath properties must be specified.')
 param authenticationType string = 'IdentityBased'
 
-@description('Conditional. Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased".')
+@description('Optional. Dead letter storage secret for key-based authentication. Will be obfuscated during read.')
 @secure()
 param deadLetterSecret string = ''
 
-@description('Conditional. Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is "IdentityBased".')
+@description('Optional. Dead letter storage URL for identity-based authentication.')
 param deadLetterUri string = ''
 
-@description('Conditional. The EventHub name in the EventHub namespace for identity-based authentication. Required if the `authenticationType` is "IdentityBased".')
-param entityPath string = ''
-
-@description('Conditional. The URL of the EventHub namespace for identity-based authentication. It must include the protocol \'sb://\' (i.e. sb://xyz.servicebus.windows.net). Required if the `authenticationType` is "IdentityBased".')
+@description('Optional. The URL of the ServiceBus namespace for identity-based authentication. It must include the protocol \'sb://\' (e.g. sb://xyz.servicebus.windows.net).')
 param endpointUri string = ''
+
+@description('Optional. The ServiceBus Topic name for identity-based authentication.')
+param entityPath string = ''
 
 @description('Conditional. PrimaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased".')
 @secure()
@@ -36,9 +36,9 @@ param primaryConnectionString string = ''
 @secure()
 param secondaryConnectionString string = ''
 
-import { managedIdentityAllType } from 'br/public:avm/utl/types/avm-common-types:0.3.0'
-@description('Optional. The managed identity definition for this resource. Only one type of identity is supported: system-assigned or user-assigned, but not both.')
-param managedIdentities managedIdentityAllType?
+import { managedIdentityOnlySysAssignedType } from 'br/public:avm/utl/types/avm-common-types:0.3.0'
+@description('Optional. The managed identity definition for this resource.')
+param managedIdentities managedIdentityOnlySysAssignedType
 
 var identity = !empty(managedIdentities)
   ? {
@@ -69,13 +69,13 @@ resource endpoint 'Microsoft.DigitalTwins/digitalTwinsInstances/endpoints@2023-0
   properties: {
     endpointType: 'ServiceBus'
     authenticationType: authenticationType
-    deadLetterSecret: authenticationType == 'KeyBased' ? deadLetterSecret : null
-    deadLetterUri: authenticationType == 'KeyBased' ? deadLetterUri : null
-    endpointUri: authenticationType == 'IdentityBased' ? endpointUri : null
-    entityPath: authenticationType == 'IdentityBased' ? entityPath : null // serviceBusNamespace::topic.name : null
-    primaryConnectionString: authenticationType == 'KeyBased' ? primaryConnectionString : null
-    secondaryConnectionString: authenticationType == 'KeyBased' ? secondaryConnectionString : null
-    identity: authenticationType == 'IdentityBased' ? identity : null
+    deadLetterSecret: deadLetterSecret
+    deadLetterUri: deadLetterUri
+    endpointUri: endpointUri
+    entityPath: entityPath
+    primaryConnectionString: primaryConnectionString
+    secondaryConnectionString: secondaryConnectionString
+    identity: identity
   }
 }
 

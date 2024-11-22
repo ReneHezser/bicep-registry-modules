@@ -20,11 +20,7 @@ This module deploys a Digital Twins Instance ServiceBus Endpoint.
 
 | Parameter | Type | Description |
 | :-- | :-- | :-- |
-| [`deadLetterSecret`](#parameter-deadlettersecret) | securestring | Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased". |
-| [`deadLetterUri`](#parameter-deadletteruri) | string | Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is "IdentityBased". |
 | [`digitalTwinInstanceName`](#parameter-digitaltwininstancename) | string | The name of the parent Digital Twin Instance resource. Required if the template is used in a standalone deployment. |
-| [`endpointUri`](#parameter-endpointuri) | string | The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net). Required if the `authenticationType` is "IdentityBased". |
-| [`entityPath`](#parameter-entitypath) | string | The EventHub name in the EventHub namespace for identity-based authentication. Required if the `authenticationType` is "IdentityBased". |
 | [`primaryConnectionString`](#parameter-primaryconnectionstring) | securestring | PrimaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased". |
 
 **Optional parameters**
@@ -32,25 +28,13 @@ This module deploys a Digital Twins Instance ServiceBus Endpoint.
 | Parameter | Type | Description |
 | :-- | :-- | :-- |
 | [`authenticationType`](#parameter-authenticationtype) | string | Specifies the authentication type being used for connecting to the endpoint. If 'KeyBased' is selected, a connection string must be specified (at least the primary connection string). If 'IdentityBased' is selected, the endpointUri and entityPath properties must be specified. |
-| [`managedIdentities`](#parameter-managedidentities) | object | The managed identity definition for this resource. Only one type of identity is supported: system-assigned or user-assigned, but not both. |
+| [`deadLetterSecret`](#parameter-deadlettersecret) | securestring | Dead letter storage secret for key-based authentication. Will be obfuscated during read. |
+| [`deadLetterUri`](#parameter-deadletteruri) | string | Dead letter storage URL for identity-based authentication. |
+| [`endpointUri`](#parameter-endpointuri) | string | The URL of the ServiceBus namespace for identity-based authentication. It must include the protocol 'sb://' (e.g. sb://xyz.servicebus.windows.net). |
+| [`entityPath`](#parameter-entitypath) | string | The ServiceBus Topic name for identity-based authentication. |
+| [`managedIdentities`](#parameter-managedidentities) | object | The managed identity definition for this resource. |
 | [`name`](#parameter-name) | string | The name of the Digital Twin Endpoint. |
 | [`secondaryConnectionString`](#parameter-secondaryconnectionstring) | securestring | SecondaryConnectionString of the endpoint for key-based authentication. Will be obfuscated during read. Only used if the `authenticationType` is "KeyBased". |
-
-### Parameter: `deadLetterSecret`
-
-Dead letter storage secret for key-based authentication. Will be obfuscated during read. Required if the `authenticationType` is "KeyBased".
-
-- Required: No
-- Type: securestring
-- Default: `''`
-
-### Parameter: `deadLetterUri`
-
-Dead letter storage URL for identity-based authentication. Required if the `authenticationType` is "IdentityBased".
-
-- Required: No
-- Type: string
-- Default: `''`
 
 ### Parameter: `digitalTwinInstanceName`
 
@@ -58,22 +42,6 @@ The name of the parent Digital Twin Instance resource. Required if the template 
 
 - Required: Yes
 - Type: string
-
-### Parameter: `endpointUri`
-
-The URL of the EventHub namespace for identity-based authentication. It must include the protocol 'sb://' (i.e. sb://xyz.servicebus.windows.net). Required if the `authenticationType` is "IdentityBased".
-
-- Required: No
-- Type: string
-- Default: `''`
-
-### Parameter: `entityPath`
-
-The EventHub name in the EventHub namespace for identity-based authentication. Required if the `authenticationType` is "IdentityBased".
-
-- Required: No
-- Type: string
-- Default: `''`
 
 ### Parameter: `primaryConnectionString`
 
@@ -98,11 +66,43 @@ Specifies the authentication type being used for connecting to the endpoint. If 
   ]
   ```
 
-### Parameter: `managedIdentities`
+### Parameter: `deadLetterSecret`
 
-The managed identity definition for this resource. Only one type of identity is supported: system-assigned or user-assigned, but not both.
+Dead letter storage secret for key-based authentication. Will be obfuscated during read.
 
 - Required: No
+- Type: securestring
+- Default: `''`
+
+### Parameter: `deadLetterUri`
+
+Dead letter storage URL for identity-based authentication.
+
+- Required: No
+- Type: string
+- Default: `''`
+
+### Parameter: `endpointUri`
+
+The URL of the ServiceBus namespace for identity-based authentication. It must include the protocol 'sb://' (e.g. sb://xyz.servicebus.windows.net).
+
+- Required: No
+- Type: string
+- Default: `''`
+
+### Parameter: `entityPath`
+
+The ServiceBus Topic name for identity-based authentication.
+
+- Required: No
+- Type: string
+- Default: `''`
+
+### Parameter: `managedIdentities`
+
+The managed identity definition for this resource.
+
+- Required: Yes
 - Type: object
 
 **Optional parameters**
@@ -110,7 +110,6 @@ The managed identity definition for this resource. Only one type of identity is 
 | Parameter | Type | Description |
 | :-- | :-- | :-- |
 | [`systemAssigned`](#parameter-managedidentitiessystemassigned) | bool | Enables system assigned managed identity on the resource. |
-| [`userAssignedResourceIds`](#parameter-managedidentitiesuserassignedresourceids) | array | The resource ID(s) to assign to the resource. Required if a user assigned identity is used for encryption. |
 
 ### Parameter: `managedIdentities.systemAssigned`
 
@@ -118,13 +117,6 @@ Enables system assigned managed identity on the resource.
 
 - Required: No
 - Type: bool
-
-### Parameter: `managedIdentities.userAssignedResourceIds`
-
-The resource ID(s) to assign to the resource. Required if a user assigned identity is used for encryption.
-
-- Required: No
-- Type: array
 
 ### Parameter: `name`
 
