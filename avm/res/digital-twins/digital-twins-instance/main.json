@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.31.92.45157",
-      "templateHash": "1548468564591965388"
+      "templateHash": "4184767836126961245"
     },
     "name": "Digital Twins Instances",
     "description": "This module deploys an Azure Digital Twins Instance.",
@@ -810,7 +810,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.31.92.45157",
-              "templateHash": "14613455485051973808"
+              "templateHash": "11930846666935641778"
             },
             "name": "Digital Twins Instance EventHub Endpoint",
             "description": "This module deploys a Digital Twins Instance EventHub Endpoint.",
@@ -905,6 +905,7 @@
             },
             "managedIdentities": {
               "$ref": "#/definitions/managedIdentityOnlySysAssignedType",
+              "nullable": true,
               "metadata": {
                 "description": "Optional. The managed identity definition for this resource."
               }

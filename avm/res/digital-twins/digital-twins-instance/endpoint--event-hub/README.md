@@ -110,7 +110,7 @@ The EventHub name in the EventHub namespace for identity-based authentication.
 
 The managed identity definition for this resource.
 
-- Required: Yes
+- Required: No
 - Type: object
 
 **Optional parameters**
