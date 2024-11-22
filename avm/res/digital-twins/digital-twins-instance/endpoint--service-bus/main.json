@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.31.92.45157",
-      "templateHash": "15942437202095615656"
+      "templateHash": "14536076463828590412"
     },
     "name": "Digital Twins Instance ServiceBus Endpoint",
     "description": "This module deploys a Digital Twins Instance ServiceBus Endpoint.",
@@ -101,6 +101,7 @@
     },
     "managedIdentities": {
       "$ref": "#/definitions/managedIdentityOnlySysAssignedType",
+      "nullable": true,
       "metadata": {
         "description": "Optional. The managed identity definition for this resource."
       }

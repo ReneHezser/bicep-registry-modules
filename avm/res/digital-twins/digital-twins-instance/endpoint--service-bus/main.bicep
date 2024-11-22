@@ -38,7 +38,7 @@ param secondaryConnectionString string = ''
 
 import { managedIdentityOnlySysAssignedType } from 'br/public:avm/utl/types/avm-common-types:0.3.0'
 @description('Optional. The managed identity definition for this resource.')
-param managedIdentities managedIdentityOnlySysAssignedType
+param managedIdentities managedIdentityOnlySysAssignedType?
 
 var identity = !empty(managedIdentities)
   ? {
