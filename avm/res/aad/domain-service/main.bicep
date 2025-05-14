@@ -3,10 +3,10 @@ metadata description = 'This module deploys an Microsoft Entra Domain Services (
 
 @minLength(1)
 @maxLength(19) // 15 characters for domain name + 4 characters for the suffix
-@description('Optional. The name of the AADDS resource. Defaults to the domain name specific to the Azure ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters.')
+@description('Optional. The name of the AADDS resource. Defaults to the domain name specific to the ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters.')
 param name string = domainName
 
-@description('Optional. The location to deploy the Azure ADDS Services. Uses the resource group location if not specified.')
+@description('Optional. The location to deploy the ADDS Services. Uses the resource group location if not specified.')
 param location string = resourceGroup().location
 
 @description('Optional. Enable/Disable usage telemetry for module.')
@@ -23,10 +23,10 @@ param enableTelemetry bool = true
   - 'aaddscontoso.com'
   '''
 })
-@description('Required. The domain name specific to the Azure ADDS service.')
+@description('Required. The domain name specific to the ADDS service.')
 param domainName string
 
-@description('Optional. The name of the SKU specific to Azure ADDS Services.')
+@description('Optional. The name of the SKU specific to ADDS Services.')
 @allowed([
   'Standard'
   'Enterprise'
@@ -126,7 +126,7 @@ param notifyDcAdmins string = 'Enabled'
 ])
 param notifyGlobalAdmins string = 'Enabled'
 
-@description('Optional. The value is to enable the Secure LDAP for external services of Azure ADDS Services.')
+@description('Optional. The value is to enable the Secure LDAP for external services of ADDS Services.')
 @allowed([
   'Enabled'
   'Disabled'

@@ -252,7 +252,7 @@ param tags = {
 
 | Parameter | Type | Description |
 | :-- | :-- | :-- |
-| [`domainName`](#parameter-domainname) | string | The domain name specific to the Azure ADDS service. |
+| [`domainName`](#parameter-domainname) | string | The domain name specific to the ADDS service. |
 
 **Conditional parameters**
 
@@ -269,20 +269,20 @@ param tags = {
 | [`diagnosticSettings`](#parameter-diagnosticsettings) | array | The diagnostic settings of the service. |
 | [`domainConfigurationType`](#parameter-domainconfigurationtype) | string | The value is to provide domain configuration type. |
 | [`enableTelemetry`](#parameter-enabletelemetry) | bool | Enable/Disable usage telemetry for module. |
-| [`externalAccess`](#parameter-externalaccess) | string | The value is to enable the Secure LDAP for external services of Azure ADDS Services. |
+| [`externalAccess`](#parameter-externalaccess) | string | The value is to enable the Secure LDAP for external services of ADDS Services. |
 | [`filteredSync`](#parameter-filteredsync) | string | The value is to synchronize scoped users and groups. |
 | [`kerberosArmoring`](#parameter-kerberosarmoring) | string | The value is to enable to provide a protected channel between the Kerberos client and the KDC. |
 | [`kerberosRc4Encryption`](#parameter-kerberosrc4encryption) | string | The value is to enable Kerberos requests that use RC4 encryption. |
 | [`ldaps`](#parameter-ldaps) | string | A flag to determine whether or not Secure LDAP is enabled or disabled. |
-| [`location`](#parameter-location) | string | The location to deploy the Azure ADDS Services. Uses the resource group location if not specified. |
+| [`location`](#parameter-location) | string | The location to deploy the ADDS Services. Uses the resource group location if not specified. |
 | [`lock`](#parameter-lock) | object | The lock settings of the service. |
-| [`name`](#parameter-name) | string | The name of the AADDS resource. Defaults to the domain name specific to the Azure ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters. |
+| [`name`](#parameter-name) | string | The name of the AADDS resource. Defaults to the domain name specific to the ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters. |
 | [`notifyDcAdmins`](#parameter-notifydcadmins) | string | The value is to notify the DC Admins. |
 | [`notifyGlobalAdmins`](#parameter-notifyglobaladmins) | string | The value is to notify the Global Admins. |
 | [`ntlmV1`](#parameter-ntlmv1) | string | The value is to enable clients making request using NTLM v1. |
 | [`replicaSets`](#parameter-replicasets) | array | Additional replica set for the managed domain. |
 | [`roleAssignments`](#parameter-roleassignments) | array | Array of role assignment objects that contain the 'roleDefinitionIdOrName' and 'principalIds' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: '/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11'. |
-| [`sku`](#parameter-sku) | string | The name of the SKU specific to Azure ADDS Services. |
+| [`sku`](#parameter-sku) | string | The name of the SKU specific to ADDS Services. |
 | [`syncNtlmPasswords`](#parameter-syncntlmpasswords) | string | The value is to enable synchronized users to use NTLM authentication. |
 | [`syncOnPremPasswords`](#parameter-synconprempasswords) | string | The value is to enable on-premises users to authenticate against managed domain. |
 | [`tags`](#parameter-tags) | object | Tags of the resource. |
@@ -290,7 +290,7 @@ param tags = {
 
 ### Parameter: `domainName`
 
-The domain name specific to the Azure ADDS service.
+The domain name specific to the ADDS service.
 
 - Required: Yes
 - Type: string
@@ -500,7 +500,7 @@ Enable/Disable usage telemetry for module.
 
 ### Parameter: `externalAccess`
 
-The value is to enable the Secure LDAP for external services of Azure ADDS Services.
+The value is to enable the Secure LDAP for external services of ADDS Services.
 
 - Required: No
 - Type: string
@@ -575,7 +575,7 @@ A flag to determine whether or not Secure LDAP is enabled or disabled.
 
 ### Parameter: `location`
 
-The location to deploy the Azure ADDS Services. Uses the resource group location if not specified.
+The location to deploy the ADDS Services. Uses the resource group location if not specified.
 
 - Required: No
 - Type: string
@@ -619,7 +619,7 @@ Specify the name of lock.
 
 ### Parameter: `name`
 
-The name of the AADDS resource. Defaults to the domain name specific to the Azure ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters.
+The name of the AADDS resource. Defaults to the domain name specific to the ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters.
 
 - Required: No
 - Type: string
@@ -804,7 +804,7 @@ The principal type of the assigned principal ID.
 
 ### Parameter: `sku`
 
-The name of the SKU specific to Azure ADDS Services.
+The name of the SKU specific to ADDS Services.
 
 - Required: No
 - Type: string

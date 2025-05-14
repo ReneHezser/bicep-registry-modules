@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "10224872388246246520"
+      "templateHash": "11454016923554153788"
     },
     "name": "Microsoft Entra Domain Services",
     "description": "This module deploys an Microsoft Entra Domain Services (AADDS) instance."
@@ -269,14 +269,14 @@
       "minLength": 1,
       "maxLength": 19,
       "metadata": {
-        "description": "Optional. The name of the AADDS resource. Defaults to the domain name specific to the Azure ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters."
+        "description": "Optional. The name of the AADDS resource. Defaults to the domain name specific to the ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters."
       }
     },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
       "metadata": {
-        "description": "Optional. The location to deploy the Azure ADDS Services. Uses the resource group location if not specified."
+        "description": "Optional. The location to deploy the ADDS Services. Uses the resource group location if not specified."
       }
     },
     "enableTelemetry": {
@@ -290,7 +290,7 @@
       "type": "string",
       "metadata": {
         "example": "  - 'contoso.onmicrosoft.com'\n  - 'aaddscontoso.com'\n  ",
-        "description": "Required. The domain name specific to the Azure ADDS service."
+        "description": "Required. The domain name specific to the ADDS service."
       },
       "minLength": 1
     },
@@ -303,7 +303,7 @@
         "Premium"
       ],
       "metadata": {
-        "description": "Optional. The name of the SKU specific to Azure ADDS Services."
+        "description": "Optional. The name of the SKU specific to ADDS Services."
       }
     },
     "replicaSets": {
@@ -456,7 +456,7 @@
         "Disabled"
       ],
       "metadata": {
-        "description": "Optional. The value is to enable the Secure LDAP for external services of Azure ADDS Services."
+        "description": "Optional. The value is to enable the Secure LDAP for external services of ADDS Services."
       }
     },
     "ldaps": {
