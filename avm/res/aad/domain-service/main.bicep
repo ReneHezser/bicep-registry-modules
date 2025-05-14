@@ -1,5 +1,5 @@
-metadata name = 'Azure Active Directory Domain Services'
-metadata description = 'This module deploys an Azure Active Directory Domain Services (AADDS) instance.'
+metadata name = 'Microsoft Entra Domain Services'
+metadata description = 'This module deploys an Microsoft Entra Domain Services (AADDS) instance.'
 
 @minLength(1)
 @maxLength(19) // 15 characters for domain name + 4 characters for the suffix
@@ -194,7 +194,7 @@ var formattedRoleAssignments = [
 // ============== //
 
 #disable-next-line no-deployments-resources
-resource avmTelemetry 'Microsoft.Resources/deployments@2024-03-01' = if (enableTelemetry) {
+resource avmTelemetry 'Microsoft.Resources/deployments@2025-03-01' = if (enableTelemetry) {
   name: '46d3xbcp.res.aad-domainservice.${replace('-..--..-', '.', '-')}.${substring(uniqueString(deployment().name, location), 0, 4)}'
   properties: {
     mode: 'Incremental'
@@ -304,13 +304,13 @@ resource domainservice_roleAssignments 'Microsoft.Authorization/roleAssignments@
 // Outputs      //
 // ============ //
 
-@description('The domain name of the Azure Active Directory Domain Services(Azure ADDS).')
+@description('The domain name of the Microsoft Entra Domain Services (ADDS).')
 output name string = domainservice.name
 
-@description('The name of the resource group the Azure Active Directory Domain Services(Azure ADDS) was created in.')
+@description('The name of the resource group the Microsoft Entra Domain Services (ADDS) was created in.')
 output resourceGroupName string = resourceGroup().name
 
-@description('The resource ID of the Azure Active Directory Domain Services(Azure ADDS).')
+@description('The resource ID of the Microsoft Entra Domain Services (ADDS).')
 output resourceId string = domainservice.id
 
 @description('The location the resource was deployed into.')

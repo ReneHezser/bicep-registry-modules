@@ -5,11 +5,11 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.34.44.8038",
-      "templateHash": "6509557093509886693"
+      "version": "0.35.1.17967",
+      "templateHash": "10224872388246246520"
     },
-    "name": "Azure Active Directory Domain Services",
-    "description": "This module deploys an Azure Active Directory Domain Services (AADDS) instance."
+    "name": "Microsoft Entra Domain Services",
+    "description": "This module deploys an Microsoft Entra Domain Services (AADDS) instance."
   },
   "definitions": {
     "replicaSetType": {
@@ -526,7 +526,7 @@
     "avmTelemetry": {
       "condition": "[parameters('enableTelemetry')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2024-03-01",
+      "apiVersion": "2025-03-01",
       "name": "[format('46d3xbcp.res.aad-domainservice.{0}.{1}', replace('-..--..-', '.', '-'), substring(uniqueString(deployment().name, parameters('location')), 0, 4))]",
       "properties": {
         "mode": "Incremental",
@@ -658,21 +658,21 @@
     "name": {
       "type": "string",
       "metadata": {
-        "description": "The domain name of the Azure Active Directory Domain Services(Azure ADDS)."
+        "description": "The domain name of the Microsoft Entra Domain Services (ADDS)."
       },
       "value": "[parameters('name')]"
     },
     "resourceGroupName": {
       "type": "string",
       "metadata": {
-        "description": "The name of the resource group the Azure Active Directory Domain Services(Azure ADDS) was created in."
+        "description": "The name of the resource group the Microsoft Entra Domain Services (ADDS) was created in."
       },
       "value": "[resourceGroup().name]"
     },
     "resourceId": {
       "type": "string",
       "metadata": {
-        "description": "The resource ID of the Azure Active Directory Domain Services(Azure ADDS)."
+        "description": "The resource ID of the Microsoft Entra Domain Services (ADDS)."
       },
       "value": "[resourceId('Microsoft.AAD/domainServices', parameters('name'))]"
     },

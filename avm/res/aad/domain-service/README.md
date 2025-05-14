@@ -1,6 +1,6 @@
-# Azure Active Directory Domain Services `[Microsoft.AAD/domainServices]`
+# Microsoft Entra Domain Services `[Microsoft.AAD/domainServices]`
 
-This module deploys an Azure Active Directory Domain Services (AADDS) instance.
+This module deploys an Microsoft Entra Domain Services (AADDS) instance.
 
 ## Navigation
 
@@ -882,9 +882,9 @@ The value is to enable clients making request using TLSv1.
 | Output | Type | Description |
 | :-- | :-- | :-- |
 | `location` | string | The location the resource was deployed into. |
-| `name` | string | The domain name of the Azure Active Directory Domain Services(Azure ADDS). |
-| `resourceGroupName` | string | The name of the resource group the Azure Active Directory Domain Services(Azure ADDS) was created in. |
-| `resourceId` | string | The resource ID of the Azure Active Directory Domain Services(Azure ADDS). |
+| `name` | string | The domain name of the Microsoft Entra Domain Services (ADDS). |
+| `resourceGroupName` | string | The name of the resource group the Microsoft Entra Domain Services (ADDS) was created in. |
+| `resourceId` | string | The resource ID of the Microsoft Entra Domain Services (ADDS). |
 
 ## Cross-referenced modules
 
