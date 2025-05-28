@@ -524,8 +524,8 @@ module aciJob 'br/public:avm/res/container-instance/container-group:0.5.0' = [
             ]
             resources: {
               requests: {
-                cpu: selfHostedConfig.?cpu ?? 1
-                memoryInGB: json(selfHostedConfig.?memoryInGB ?? 2)
+                cpu: (selfHostedConfig.?azureContainerAppTarget.?resources.?cpu ?? selfHostedConfig.?azureContainerInstanceTarget.?cpu) ?? 1
+                memoryInGB: (selfHostedConfig.?azureContainerAppTarget.?resources.?memoryInGB ?? selfHostedConfig.?azureContainerInstanceTarget.?memory) ?? 2
               }
             }
             environmentVariables: selfHostedConfig.selfHostedType == 'github'
