@@ -506,7 +506,6 @@ module aciJob 'br/public:avm/res/container-instance/container-group:0.5.0' = [
                 : null
         }
       ]
-      // ipAddressType: privateNetworking ? 'Private' : 'Public'
       sku: 'Standard'
       containers: [
         {
@@ -526,7 +525,7 @@ module aciJob 'br/public:avm/res/container-instance/container-group:0.5.0' = [
             resources: {
               requests: {
                 cpu: selfHostedConfig.?cpu ?? 1
-                memoryInGB: selfHostedConfig.?memoryInGB ?? 2
+                memoryInGB: json(selfHostedConfig.?memoryInGB ?? 2)
               }
             }
             environmentVariables: selfHostedConfig.selfHostedType == 'github'
