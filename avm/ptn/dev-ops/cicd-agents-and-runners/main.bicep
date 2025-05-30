@@ -250,11 +250,11 @@ module acr 'br/public:avm/res/container-registry/registry:0.9.1' = {
     roleAssignments: [
       {
         principalId: userAssignedIdentity.outputs.principalId
-        roleDefinitionIdOrName: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+        roleDefinitionIdOrName: '7f951dda-4ed3-4680-a7ca-43fe172d538d' // AcrPull
       }
       {
         principalId: userAssignedIdentity.outputs.principalId
-        roleDefinitionIdOrName: '8311e382-0749-4cb8-b61a-304f252e45ec'
+        roleDefinitionIdOrName: '8311e382-0749-4cb8-b61a-304f252e45ec' // AcrPush
       }
     ]
     networkRuleBypassOptions: privateNetworking ? 'AzureServices' : 'None'
@@ -288,6 +288,7 @@ module acr 'br/public:avm/res/container-registry/registry:0.9.1' = {
       : null
   }
 }
+
 module newVnet 'br/public:avm/res/network/virtual-network:0.7.0' = if (networkingConfiguration.networkType == 'createNew') {
   name: 'vnet-${uniqueString(resourceGroup().id)}'
   params: {
@@ -345,6 +346,7 @@ module newVnet 'br/public:avm/res/network/virtual-network:0.7.0' = if (networkin
     )
   }
 }
+
 module appEnvironment 'br/public:avm/res/app/managed-environment:0.11.1' = if (contains(
   computeTypes,
   'azure-container-app'
@@ -353,7 +355,7 @@ module appEnvironment 'br/public:avm/res/app/managed-environment:0.11.1' = if (c
   params: {
     name: 'appEnv${namingPrefix}${uniqueString(resourceGroup().id)}'
     appLogsConfiguration: {
-      destination: 'LogAnalytics'
+      destination: 'log-analytics'
       logAnalyticsConfiguration: {
         customerId: logAnalyticsWorkspace.outputs.logAnalyticsWorkspaceId
         sharedKey: logAnalyticsWorkspace.outputs.primarySharedKey
@@ -470,6 +472,7 @@ resource taskRun 'Microsoft.ContainerRegistry/registries/taskRuns@2025-03-01-pre
   }
 ]
 
+// Module for Azure Container Instances
 module aciJob 'br/public:avm/res/container-instance/container-group:0.5.0' = [
   for i in range(0, int(selfHostedConfig.?azureContainerInstanceTarget.?numberOfInstances ?? 1)): if (contains(
     computeTypes,
@@ -481,7 +484,7 @@ module aciJob 'br/public:avm/res/container-instance/container-group:0.5.0' = [
     ]
     params: {
       name: '${namingPrefix}-${uniqueString(resourceGroup().id)}-instance-${i}'
-      availabilityZone: selfHostedConfig.?azureContainerInstanceTarget.?availabilityZone ?? '1'
+      availabilityZone: selfHostedConfig.?azureContainerInstanceTarget.?availabilityZone ?? 1
       managedIdentities: {
         userAssignedResourceIds: [
           userAssignedIdentity.outputs.resourceId
@@ -494,18 +497,25 @@ module aciJob 'br/public:avm/res/container-instance/container-group:0.5.0' = [
           server: acr.outputs.loginServer
         }
       ]
-      subnets: [
-        {
-          subnetResourceId: privateNetworking && networkingConfiguration.networkType == 'createNew'
-            ? filter(
-                newVnet.outputs.subnetResourceIds,
-                subnetId => contains(subnetId, networkingConfiguration.?containerInstanceSubnetName ?? 'aci-subnet')
-              )[0]
-            : privateNetworking && networkingConfiguration.networkType == 'useExisting'
-                ? '${networkingConfiguration.virtualNetworkResourceId}/subnets/${networkingConfiguration.computeNetworking.?containerInstanceSubnetName}'
-                : null
-        }
-      ]
+      subnets: union(
+        (privateNetworking && networkingConfiguration.networkType == 'createNew')
+          ? [
+              {
+                subnetResourceId: filter(
+                  newVnet.outputs.subnetResourceIds,
+                  subnetId => contains(subnetId, networkingConfiguration.?containerInstanceSubnetName ?? 'aci-subnet')
+                )[0]
+              }
+            ]
+          : [],
+        (privateNetworking && networkingConfiguration.networkType == 'useExisting')
+          ? [
+              {
+                subnetResourceId: '${networkingConfiguration.virtualNetworkResourceId}/subnets/${networkingConfiguration.computeNetworking.?containerInstanceSubnetName}'
+              }
+            ]
+          : []
+      )
       sku: 'Standard'
       containers: [
         {
@@ -525,7 +535,7 @@ module aciJob 'br/public:avm/res/container-instance/container-group:0.5.0' = [
             resources: {
               requests: {
                 cpu: (selfHostedConfig.?azureContainerAppTarget.?resources.?cpu ?? selfHostedConfig.?azureContainerInstanceTarget.?cpu) ?? 1
-                memoryInGB: (selfHostedConfig.?azureContainerAppTarget.?resources.?memoryInGB ?? selfHostedConfig.?azureContainerInstanceTarget.?memory) ?? 2
+                memoryInGB: (selfHostedConfig.?azureContainerAppTarget.?resources.?memoryInGB ?? selfHostedConfig.?azureContainerInstanceTarget.?memory) ?? '2'
               }
             }
             environmentVariables: selfHostedConfig.selfHostedType == 'github'
@@ -580,6 +590,7 @@ module aciJob 'br/public:avm/res/container-instance/container-group:0.5.0' = [
   }
 ]
 
+// Module for Azure Container Apps
 module acaJob 'br/public:avm/res/app/job:0.6.0' = if (contains(computeTypes, 'azure-container-app')) {
   name: '${namingPrefix}acaJob'
   dependsOn: [

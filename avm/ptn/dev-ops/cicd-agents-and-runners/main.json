@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.35.1.17967",
-      "templateHash": "3420557228140332349"
+      "templateHash": "7444327452009454025"
     },
     "name": "CI CD Agents and Runners",
     "description": "This module deploys self-hosted agents and runners for Azure DevOps and GitHub on Azure Container Instances and/or Azure Container Apps."
@@ -12181,7 +12181,7 @@
           },
           "appLogsConfiguration": {
             "value": {
-              "destination": "LogAnalytics",
+              "destination": "log-analytics",
               "logAnalyticsConfiguration": {
                 "customerId": "[listOutputsWithSecureValues(resourceId('Microsoft.Resources/deployments', format('logAnalyticsWorkspace-{0}', uniqueString(resourceGroup().id))), '2022-09-01').logAnalyticsWorkspaceId]",
                 "sharedKey": "[listOutputsWithSecureValues(resourceId('Microsoft.Resources/deployments', format('logAnalyticsWorkspace-{0}', uniqueString(resourceGroup().id))), '2022-09-01').primarySharedKey]"
@@ -15574,7 +15574,7 @@
             "value": "[format('{0}-{1}-instance-{2}', parameters('namingPrefix'), uniqueString(resourceGroup().id), range(0, int(coalesce(tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerInstanceTarget'), 'numberOfInstances'), 1)))[copyIndex()])]"
           },
           "availabilityZone": {
-            "value": "[coalesce(tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerInstanceTarget'), 'availabilityZone'), '1')]"
+            "value": "[coalesce(tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerInstanceTarget'), 'availabilityZone'), 1)]"
           },
           "managedIdentities": {
             "value": {
@@ -15595,11 +15595,7 @@
             ]
           },
           "subnets": {
-            "value": [
-              {
-                "subnetResourceId": "[if(and(parameters('privateNetworking'), equals(parameters('networkingConfiguration').networkType, 'createNew')), filter(reference('newVnet').outputs.subnetResourceIds.value, lambda('subnetId', contains(lambdaVariables('subnetId'), coalesce(tryGet(parameters('networkingConfiguration'), 'containerInstanceSubnetName'), 'aci-subnet'))))[0], if(and(parameters('privateNetworking'), equals(parameters('networkingConfiguration').networkType, 'useExisting')), format('{0}/subnets/{1}', parameters('networkingConfiguration').virtualNetworkResourceId, tryGet(parameters('networkingConfiguration').computeNetworking, 'containerInstanceSubnetName')), null()))]"
-              }
-            ]
+            "value": "[union(if(and(parameters('privateNetworking'), equals(parameters('networkingConfiguration').networkType, 'createNew')), createArray(createObject('subnetResourceId', filter(reference('newVnet').outputs.subnetResourceIds.value, lambda('subnetId', contains(lambdaVariables('subnetId'), coalesce(tryGet(parameters('networkingConfiguration'), 'containerInstanceSubnetName'), 'aci-subnet'))))[0])), createArray()), if(and(parameters('privateNetworking'), equals(parameters('networkingConfiguration').networkType, 'useExisting')), createArray(createObject('subnetResourceId', format('{0}/subnets/{1}', parameters('networkingConfiguration').virtualNetworkResourceId, tryGet(parameters('networkingConfiguration').computeNetworking, 'containerInstanceSubnetName')))), createArray()))]"
           },
           "sku": {
             "value": "Standard"
@@ -15619,7 +15615,7 @@
                   "resources": {
                     "requests": {
                       "cpu": "[coalesce(coalesce(tryGet(tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerAppTarget'), 'resources'), 'cpu'), tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerInstanceTarget'), 'cpu')), 1)]",
-                      "memoryInGB": "[coalesce(coalesce(tryGet(tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerAppTarget'), 'resources'), 'memoryInGB'), tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerInstanceTarget'), 'memory')), 2)]"
+                      "memoryInGB": "[coalesce(coalesce(tryGet(tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerAppTarget'), 'resources'), 'memoryInGB'), tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerInstanceTarget'), 'memory')), '2')]"
                     }
                   },
                   "environmentVariables": "[if(equals(parameters('selfHostedConfig').selfHostedType, 'github'), createArray(createObject('name', 'GH_RUNNER_NAME', 'value', coalesce(tryGet(parameters('selfHostedConfig'), 'runnerName'), format('runner-{0}', range(0, int(coalesce(tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerInstanceTarget'), 'numberOfInstances'), 1)))[copyIndex()]))), createObject('name', 'GH_RUNNER_URL', 'value', variables('gitHubRunnerURL')), createObject('name', 'GH_RUNNER_GROUP', 'value', if(not(equals(tryGet(parameters('selfHostedConfig'), 'runnerGroup'), null())), format('{0}', tryGet(parameters('selfHostedConfig'), 'runnerGroup')), '')), createObject('name', 'GH_RUNNER_TOKEN', 'secureValue', parameters('selfHostedConfig').personalAccessToken)), createArray(createObject('name', 'AZP_URL', 'value', variables('devOpsOrgURL')), createObject('name', 'AZP_POOL', 'value', parameters('selfHostedConfig').agentsPoolName), createObject('name', 'AZP_AGENT_NAME', 'value', coalesce(tryGet(parameters('selfHostedConfig'), 'agentName'), format('agent-{0}', range(0, int(coalesce(tryGet(tryGet(parameters('selfHostedConfig'), 'azureContainerInstanceTarget'), 'numberOfInstances'), 1)))[copyIndex()]))), createObject('name', 'AZP_TOKEN', 'secureValue', parameters('selfHostedConfig').personalAccessToken)))]"
