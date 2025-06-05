@@ -2236,7 +2236,7 @@ This section gives you an overview of all local-referenced module files (i.e., o
 | :-- | :-- |
 | `br/public:avm/ptn/authorization/resource-role-assignment:0.1.2` | Remote reference |
 | `br/public:avm/res/app/job:0.6.0` | Remote reference |
-| `br/public:avm/res/app/managed-environment:0.11.1` | Remote reference |
+| `br/public:avm/res/app/managed-environment:0.11.2` | Remote reference |
 | `br/public:avm/res/container-instance/container-group:0.5.0` | Remote reference |
 | `br/public:avm/res/container-registry/registry:0.9.1` | Remote reference |
 | `br/public:avm/res/managed-identity/user-assigned-identity:0.4.1` | Remote reference |

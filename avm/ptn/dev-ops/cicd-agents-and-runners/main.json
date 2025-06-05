@@ -5,8 +5,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.35.1.17967",
-      "templateHash": "7444327452009454025"
+      "version": "0.36.1.42791",
+      "templateHash": "16484756923407354358"
     },
     "name": "CI CD Agents and Runners",
     "description": "This module deploys self-hosted agents and runners for Azure DevOps and GitHub on Azure Container Instances and/or Azure Container Apps."
@@ -12219,7 +12219,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.35.1.17967",
-              "templateHash": "7921731604646231285"
+              "templateHash": "10777649424390064640"
             },
             "name": "App ManagedEnvironments",
             "description": "This module deploys an App Managed Environment (also known as a Container App Environment)."
@@ -12319,6 +12319,11 @@
               "properties": {
                 "destination": {
                   "type": "string",
+                  "allowedValues": [
+                    "azure-monitor",
+                    "log-analytics",
+                    "none"
+                  ],
                   "nullable": true,
                   "metadata": {
                     "description": "Optional. The destination of the logs."
@@ -12342,7 +12347,7 @@
                   },
                   "nullable": true,
                   "metadata": {
-                    "description": "Optional. The configuration for Log Analytics."
+                    "description": "Conditional. The Log Analytics configuration. Required if `destination` is `log-analytics`."
                   }
                 }
               },
@@ -12747,7 +12752,7 @@
               "condition": "[parameters('enableTelemetry')]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2024-11-01",
-              "name": "[format('46d3xbcp.res.app-managedenvironment.{0}.{1}', replace('0.11.1', '.', '-'), substring(uniqueString(deployment().name, parameters('location')), 0, 4))]",
+              "name": "[format('46d3xbcp.res.app-managedenvironment.{0}.{1}', replace('0.11.2', '.', '-'), substring(uniqueString(deployment().name, parameters('location')), 0, 4))]",
               "properties": {
                 "mode": "Incremental",
                 "template": {

@@ -29,6 +29,9 @@ param enableTelemetry bool = true
 @description('Optional. Name of the infrastructure resource group for the container apps environment.')
 param infrastructureResourceGroupName string?
 
+// @description('Optional. The dockerfile content containing the instructions on how to build the docker container image. If not provided, the default Dockerfile will be used.')
+// param jobDockerfileContent string = ''
+
 // ================ //
 // Variables        //
 // ================ //
@@ -347,7 +350,7 @@ module newVnet 'br/public:avm/res/network/virtual-network:0.7.0' = if (networkin
   }
 }
 
-module appEnvironment 'br/public:avm/res/app/managed-environment:0.11.1' = if (contains(
+module appEnvironment 'br/public:avm/res/app/managed-environment:0.11.2' = if (contains(
   computeTypes,
   'azure-container-app'
 )) {
