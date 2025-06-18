@@ -2,6 +2,16 @@
 
 The latest version of the changelog can be found [here](/Azure/bicep-registry-modules/blob/main/avm/res/aad/domain-service/CHANGELOG.md).
 
+## 0.3.3
+
+### Changes
+
+- Renamed to Entra
+
+### Breaking Changes
+
+- none
+
 ## 0.3.2
 
 ### Changes

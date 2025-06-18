@@ -1,12 +1,12 @@
-metadata name = 'Azure Active Directory Domain Services'
-metadata description = 'This module deploys an Azure Active Directory Domain Services (AADDS) instance.'
+metadata name = 'Microsoft Entra Domain Services'
+metadata description = 'This module deploys a Microsoft Entra Domain Services (AADDS) instance.'
 
 @minLength(1)
 @maxLength(19) // 15 characters for domain name + 4 characters for the suffix
-@description('Optional. The name of the AADDS resource. Defaults to the domain name specific to the Azure ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters.')
+@description('Optional. The name of the AADDS resource. Defaults to the domain name specific to the Microsoft Entra Domain Services. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters.')
 param name string = domainName
 
-@description('Optional. The location to deploy the Azure ADDS Services. Uses the resource group location if not specified.')
+@description('Optional. The location to deploy the Microsoft Entra Domain Services. Uses the resource group location if not specified.')
 param location string = resourceGroup().location
 
 @description('Optional. Enable/Disable usage telemetry for module.')
@@ -304,13 +304,13 @@ resource domainservice_roleAssignments 'Microsoft.Authorization/roleAssignments@
 // Outputs      //
 // ============ //
 
-@description('The domain name of the Azure Active Directory Domain Services(Azure ADDS).')
+@description('The domain name of the Microsoft Entra Domain Services(Azure ADDS).')
 output name string = domainservice.name
 
-@description('The name of the resource group the Azure Active Directory Domain Services(Azure ADDS) was created in.')
+@description('The name of the resource group the Microsoft Entra Domain Services(Azure ADDS) was created in.')
 output resourceGroupName string = resourceGroup().name
 
-@description('The resource ID of the Azure Active Directory Domain Services(Azure ADDS).')
+@description('The resource ID of the Microsoft Entra Domain Services(Azure ADDS).')
 output resourceId string = domainservice.id
 
 @description('The location the resource was deployed into.')
