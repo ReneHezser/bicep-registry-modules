@@ -26,7 +26,7 @@ param namePrefix string = '#_namePrefix_#'
 
 // General resources
 // =================
-resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+resource resourceGroup 'Microsoft.Resources/resourceGroups@2025-04-01' = {
   name: resourceGroupName
   location: resourceLocation
 }
@@ -62,7 +62,7 @@ module diagnosticDependencies '../../../../../../../utilities/e2e-template-asset
 // Test Execution //
 // ============== //
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2024-11-01' existing = {
   name: last(split(nestedDependencies.outputs.keyVaultResourceId, '/'))
   scope: resourceGroup
 }
@@ -110,7 +110,7 @@ module testDeployment '../../../main.bicep' = {
         subnetId: nestedDependencies.outputs.subnetResourceId
       }
     ]
-    sku: 'Standard'
+    sku: 'Premium'
     tags: {
       'hidden-title': 'This is visible in the resource name'
       Environment: 'Non-Prod'

@@ -1,6 +1,6 @@
-# Azure Active Directory Domain Services `[Microsoft.AAD/domainServices]`
+# Microsoft Entra Domain Services `[Microsoft.AAD/domainServices]`
 
-This module deploys an Azure Active Directory Domain Services (AADDS) instance.
+This module deploys a Microsoft Entra Domain Services (AADDS) instance.
 
 ## Navigation
 
@@ -85,7 +85,7 @@ module domainService 'br/public:avm/res/aad/domain-service:<version>' = {
         subnetId: '<subnetId>'
       }
     ]
-    sku: 'Standard'
+    sku: 'Premium'
     tags: {
       Environment: 'Non-Prod'
       'hidden-title': 'This is visible in the resource name'
@@ -171,7 +171,7 @@ module domainService 'br/public:avm/res/aad/domain-service:<version>' = {
       ]
     },
     "sku": {
-      "value": "Standard"
+      "value": "Premium"
     },
     "tags": {
       "value": {
@@ -235,7 +235,7 @@ param replicaSets = [
     subnetId: '<subnetId>'
   }
 ]
-param sku = 'Standard'
+param sku = 'Premium'
 param tags = {
   Environment: 'Non-Prod'
   'hidden-title': 'This is visible in the resource name'
@@ -274,9 +274,9 @@ param tags = {
 | [`kerberosArmoring`](#parameter-kerberosarmoring) | string | The value is to enable to provide a protected channel between the Kerberos client and the KDC. |
 | [`kerberosRc4Encryption`](#parameter-kerberosrc4encryption) | string | The value is to enable Kerberos requests that use RC4 encryption. |
 | [`ldaps`](#parameter-ldaps) | string | A flag to determine whether or not Secure LDAP is enabled or disabled. |
-| [`location`](#parameter-location) | string | The location to deploy the Azure ADDS Services. Uses the resource group location if not specified. |
+| [`location`](#parameter-location) | string | The location to deploy the Microsoft Entra Domain Services. Uses the resource group location if not specified. |
 | [`lock`](#parameter-lock) | object | The lock settings of the service. |
-| [`name`](#parameter-name) | string | The name of the AADDS resource. Defaults to the domain name specific to the Azure ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters. |
+| [`name`](#parameter-name) | string | The name of the AADDS resource. Defaults to the domain name specific to the Microsoft Entra Domain Services. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters. |
 | [`notifyDcAdmins`](#parameter-notifydcadmins) | string | The value is to notify the DC Admins. |
 | [`notifyGlobalAdmins`](#parameter-notifyglobaladmins) | string | The value is to notify the Global Admins. |
 | [`ntlmV1`](#parameter-ntlmv1) | string | The value is to enable clients making request using NTLM v1. |
@@ -575,7 +575,7 @@ A flag to determine whether or not Secure LDAP is enabled or disabled.
 
 ### Parameter: `location`
 
-The location to deploy the Azure ADDS Services. Uses the resource group location if not specified.
+The location to deploy the Microsoft Entra Domain Services. Uses the resource group location if not specified.
 
 - Required: No
 - Type: string
@@ -619,7 +619,7 @@ Specify the name of lock.
 
 ### Parameter: `name`
 
-The name of the AADDS resource. Defaults to the domain name specific to the Azure ADDS service. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters.
+The name of the AADDS resource. Defaults to the domain name specific to the Microsoft Entra Domain Services. The prefix of your specified domain name (such as dscontoso in the dscontoso.com domain name) must contain 15 or fewer characters.
 
 - Required: No
 - Type: string
@@ -882,9 +882,9 @@ The value is to enable clients making request using TLSv1.
 | Output | Type | Description |
 | :-- | :-- | :-- |
 | `location` | string | The location the resource was deployed into. |
-| `name` | string | The domain name of the Azure Active Directory Domain Services(Azure ADDS). |
-| `resourceGroupName` | string | The name of the resource group the Azure Active Directory Domain Services(Azure ADDS) was created in. |
-| `resourceId` | string | The resource ID of the Azure Active Directory Domain Services(Azure ADDS). |
+| `name` | string | The domain name of the Microsoft Entra Domain Services(Azure ADDS). |
+| `resourceGroupName` | string | The name of the resource group the Microsoft Entra Domain Services(Azure ADDS) was created in. |
+| `resourceId` | string | The resource ID of the Microsoft Entra Domain Services(Azure ADDS). |
 
 ## Cross-referenced modules
 
