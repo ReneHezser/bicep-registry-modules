@@ -2011,8 +2011,11 @@ Tags to help categorize the resource in the Azure portal.
 | `exportedSecrets` |  | A hashtable of references to the secrets exported to the provided Key Vault. The key of each reference is each secret's name. |
 | `location` | string | The location the resource was deployed into. |
 | `name` | string | The name of the search service. |
+| `primaryKey` | securestring | The primary admin API key of the search service. |
+| `privateEndpoints` | array | The private endpoints of the search service. |
 | `resourceGroupName` | string | The name of the resource group the search service was created in. |
 | `resourceId` | string | The resource ID of the search service. |
+| `secondaryKey` | securestring | The secondaryKey admin API key of the search service. |
 | `systemAssignedMIPrincipalId` | string | The principal ID of the system assigned identity. |
 
 ## Cross-referenced modules
