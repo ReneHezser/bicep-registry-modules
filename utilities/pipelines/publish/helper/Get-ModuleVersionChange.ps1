@@ -34,8 +34,15 @@ function Get-ModuleVersionChange {
         [string] $VersionFilePath
     )
 
-    # The diff will be empty, if the version.json file was not updated
-    $diff = git diff --diff-filter=AM HEAD^ HEAD $VersionFilePath | Out-String
+    # The diff will be empty, if the version.json file was not updated. Filtering for added or modified files only.
+    $currentBranch = Get-GitBranchName
+    if ($currentBranch -eq 'main') {
+        Write-Verbose 'Gathering modified files from the pull request' -Verbose
+        $diff = git diff --diff-filter=AM HEAD^ HEAD $VersionFilePath | Out-String
+    } else {
+        Write-Verbose 'Gathering modified files between current branch and main' -Verbose
+        $diff = git diff --diff-filter=AM 'origin/main' $VersionFilePath | Out-String
+    }
 
     if ($diff -match '\-\s*"version":\s*"([0-9]{1})\.([0-9]{1})".*') {
         $oldVersion = (New-Object System.Version($matches[1], $matches[2]))
