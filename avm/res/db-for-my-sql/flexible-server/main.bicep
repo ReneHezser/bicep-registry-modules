@@ -4,7 +4,7 @@ metadata description = 'This module deploys a DBforMySQL Flexible Server.'
 @description('Required. The name of the MySQL flexible server.')
 param name string
 
-import { lockType } from 'br/public:avm/utl/types/avm-common-types:0.6.0'
+import { lockType } from 'br/public:avm/utl/types/avm-common-types:0.6.1'
 @description('Optional. The lock settings of the service.')
 param lock lockType?
 
@@ -74,11 +74,11 @@ param geoRedundantBackup string = 'Enabled'
 @description('Optional. The mode to create a new MySQL server.')
 param createMode string = 'Default'
 
-import { managedIdentityOnlyUserAssignedType } from 'br/public:avm/utl/types/avm-common-types:0.4.0'
+import { managedIdentityOnlyUserAssignedType } from 'br/public:avm/utl/types/avm-common-types:0.6.1'
 @description('Conditional. The managed identity definition for this resource. Required if \'customerManagedKey\' is not empty.')
 param managedIdentities managedIdentityOnlyUserAssignedType?
 
-import { customerManagedKeyType } from 'br/public:avm/utl/types/avm-common-types:0.4.0'
+import { customerManagedKeyType } from 'br/public:avm/utl/types/avm-common-types:0.6.1'
 @description('Optional. The customer managed key definition to use for the managed service.')
 param customerManagedKey customerManagedKeyType?
 
@@ -161,6 +161,8 @@ param storageSizeGB int = 64
 @allowed([
   '5.7'
   '8.0.21'
+  '8.4'
+  '9.3'
 ])
 @description('Optional. MySQL Server version.')
 param version string = '8.0.21'
@@ -181,11 +183,11 @@ param configurations configurationType[]?
 ])
 param advancedThreatProtection string = 'Enabled'
 
-import { roleAssignmentType } from 'br/public:avm/utl/types/avm-common-types:0.4.0'
+import { roleAssignmentType } from 'br/public:avm/utl/types/avm-common-types:0.6.1'
 @description('Optional. Array of role assignments to create.')
 param roleAssignments roleAssignmentType[]?
 
-import { diagnosticSettingFullType } from 'br/public:avm/utl/types/avm-common-types:0.4.0'
+import { diagnosticSettingFullType } from 'br/public:avm/utl/types/avm-common-types:0.6.1'
 @description('Optional. The diagnostic settings of the service.')
 param diagnosticSettings diagnosticSettingFullType[]?
 
@@ -285,14 +287,14 @@ resource cMKUserAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentiti
   )
 }
 
-resource cMKGeoKeyVault 'Microsoft.KeyVault/vaults@2024-11-01' existing = if (!empty(customerManagedKeyGeo.?keyVaultResourceId)) {
+resource cMKGeoKeyVault 'Microsoft.KeyVault/vaults@2025-05-01' existing = if (!empty(customerManagedKeyGeo.?keyVaultResourceId)) {
   name: last(split(customerManagedKeyGeo.?keyVaultResourceId!, '/'))
   scope: resourceGroup(
     split(customerManagedKeyGeo.?keyVaultResourceId!, '/')[2],
     split(customerManagedKeyGeo.?keyVaultResourceId!, '/')[4]
   )
 
-  resource cMKKey 'keys@2024-11-01' existing = if (!empty(customerManagedKeyGeo.?keyVaultResourceId) && !empty(customerManagedKeyGeo.?keyName)) {
+  resource cMKKey 'keys@2025-05-01' existing = if (!empty(customerManagedKeyGeo.?keyVaultResourceId) && !empty(customerManagedKeyGeo.?keyName)) {
     name: customerManagedKeyGeo.?keyName!
   }
 }
@@ -305,7 +307,7 @@ resource cMKGeoUserAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdent
   )
 }
 
-resource flexibleServer 'Microsoft.DBforMySQL/flexibleServers@2024-12-01-preview' = {
+resource flexibleServer 'Microsoft.DBforMySQL/flexibleServers@2024-12-30' = {
   name: name
   location: location
   tags: tags
@@ -452,6 +454,7 @@ module flexibleServer_advancedThreatProtection 'advanced-threat-protection/main.
   }
 }
 
+#disable-next-line use-recent-api-versions
 resource flexibleServer_diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = [
   for (diagnosticSetting, index) in (diagnosticSettings ?? []): {
     name: diagnosticSetting.?name ?? '${name}-diagnosticSettings'
@@ -481,7 +484,7 @@ resource flexibleServer_diagnosticSettings 'Microsoft.Insights/diagnosticSetting
   }
 ]
 
-module flexibleServer_privateEndpoints 'br/public:avm/res/network/private-endpoint:0.11.0' = [
+module flexibleServer_privateEndpoints 'br/public:avm/res/network/private-endpoint:0.11.1' = [
   for (privateEndpoint, index) in (privateEndpoints ?? []): if (empty(delegatedSubnetResourceId)) {
     name: '${uniqueString(deployment().name, location)}-MySQL-Flex-PrivateEndpoint-${index}'
     scope: resourceGroup(
